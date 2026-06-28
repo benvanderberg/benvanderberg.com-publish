@@ -1,6 +1,4 @@
 # ─── Rewrite engine ───────────────────────────────────────────────────────────
-Options -Indexes
-Options +FollowSymLinks
 RewriteEngine On
 
 # Force HTTPS
