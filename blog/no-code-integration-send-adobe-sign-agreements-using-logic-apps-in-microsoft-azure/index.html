@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>No Code Integration: Send Adobe Acrobat Sign Agreements Using Logic Apps in Microsoft Azure — Ben Vanderberg</title><meta name="description" content="When creating applications, it is not uncommon to have a process that explicitly requires a signature, a form, or an approval process on a set of documents. Oft"><meta property="og:title" content="No Code Integration: Send Adobe Acrobat Sign Agreements Using Logic Apps in Microsoft Azure — Ben Vanderberg"><meta property="og:description" content="When creating applications, it is not uncommon to have a process that explicitly requires a signature, a form, or an approval process on a set of documents. Oft"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure-a4b864c5b8c"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>No Code Integration: Send Adobe Acrobat Sign Agreements Using Logic Apps in Microsoft Azure</h1><span class="meta">February 19, 2019</span><img class="hero-img" src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/01.png" alt=""><div class="article-body"><p>When creating applications, it is not uncommon to have a process that explicitly requires a signature, a form, or an approval process on a set of documents. Often, these end up causing users to download a PDF, print the document, etc. With the dawn of e-signature and form technologies like Adobe Acrobat Sign, we can easily turn this into a 100% digital process.</p>
+<p>Adobe Acrobat Sign can be integrated into your Azure functions using Logic Apps, making it really easy for you to add functionality without burning additional development hours. Let’s walk through the simple process to do this.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Microsoft Azure portal</li>
+<li>Adobe Acrobat Sign subscription (You can get a developer account here.)</li>
+</ul>
+<h2 id="what-is-logic-apps">What is Logic Apps?</h2>
+<p>Logic Apps is part of Microsoft Azure and allow developers to design workflows that articulate intent via a trigger and series of steps. It is an easy GUI interface within the Microsoft Azure portal and has more than 250 out-of-the-box connectors including Adobe Acrobat Sign, Adobe Creative Cloud, Slack, and others. You can easily hook into Logic Apps, and then it takes care of communicating with Adobe Acrobat Sign without needing to learn the Adobe Acrobat Sign APIs .</p>
+<p>If you’re familiar with Microsoft Power Automate, Microsoft Power Automate is built on top of Logic Apps and you will feel right at home. Logic Apps is more geared towards developers creating easy no-code connectors, while Microsoft Power Automate is geared towards IT and end-users.</p>
+<h2 id="creating-a-logic-app">Creating a Logic App</h2>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/02.png" alt=""></p>
+<ol>
+<li>Log in to Microsoft Azure portal.</li>
+<li>Click on Create a resource.</li>
+<li>Search for “Logic App (Consumption)” and select it.</li>
+<li>Click Create.</li>
+<li>Set your parameters for your Logic App:</li>
+</ol>
+<ul>
+<li>Name SendAgreement</li>
+<li>Subscription Free Trial</li>
+<li>Resource Group Ex. AdobeSign</li>
+<li>Location Ex. Central US</li>
+<li>Log Analytics Ex. Off</li>
+</ul>
+<p>Once you are ready, click Review + create.</p>
+<p>Now that your resource has been created, you will receive a notification in the top right corner of your screen. Click on Go to resource.</p>
+<p>In the next sections, I will walk-through some examples of how you can do common calls to Adobe Acrobat Sign, assuming that you can start a new Logic App using the instructions above.</p>
+<h2 id="configuring-your-logic-app">Configuring your Logic App</h2>
+<h3 id="send-adobe-acrobat-sign-agreement">Send Adobe Acrobat Sign agreement</h3>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/03.png" alt="Creating a Logic App is very similar to creating a flow in Microsoft Power Automate."></p>
+<p>Now that you have created your Logic App, the Logic App Designer is now asking you if you want to use a template (see screenshot above). While you can choose any of the triggers you desire, in this example we will use an HTTP request.</p>
+<p>To send a document for signature, you need to either use an Adobe Acrobat Sign library template, or you need to upload a document as a transient document first before sending an agreement. In this example, we will upload a document.</p>
+<p>We are going to use an example Offer Letter PDF file. In Microsoft Power Automate, you will need to add the following steps to upload a transient document:</p>
+<ul>
+<li>Get file content using path (OneDrive)In this example we are using OneDrive, but you can use a variety of other connectors such as BOX, Dropbox, SharePoint, etc.</li>
+<li>Upload a document and get a document ID (Adobe Acrobat Sign)Uploads a document as a transient document and returns a document ID for reference.</li>
+<li>Create an agreement from an uploaded document (Adobe Acrobat Sign)Sends an agreement for signature</li>
+</ul>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/04.png" alt=""></p>
+<p>Set up trigger</p>
+<ol>
+<li>Click on When an HTTP request is received in the list of common triggers.</li>
+<li>Click on Use sample payload to generate schema.</li>
+<li>We are going to create a basic schema that can be posted to this HTTP request to pass information. Paste the following into the block:{ “Agreement Name”:“”, “Email”:“”, “File Path:”“, “File Name”:“”, “Employee First Name”:“”, “Employee Last Name”:“”, “Employee Full Name”:“”, “Manager Full Name”:“”, “Manager Email”:“”, “Salary”:“”, “Start Date”:“” }</li>
+<li>Click Done. This will convert your JSON into a schema for the HTTP request to understand.</li>
+</ol>
+<p>Setting the method is simply for demonstration purposes. It would make more sense for you to configure a POST request, which you can learn more about here.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Get file content using path</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/05.png" alt=""></p>
+<p>Before we set up this step, we are going to use a Word document to upload into OneDrive that looks like this:</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/06.png" alt=""></p>
+<p>What you will notice is that there are Adobe Acrobat Sign Text Tags in the document. The reason for this is we are going to use the Adobe Acrobat Sign connector in Logic Apps to merge information into the document. Here is a list of each of the text tags used. To learn more about Adobe Acrobat Sign Text Tags, see here.</p>
+<ul>
+<li>{{!EmployeeFirstName}}</li>
+<li>{{!Title}}</li>
+<li>{{!Salary}}</li>
+<li>{{!StartDate}}</li>
+<li>{{Sig1_es_:signer1:signature}}</li>
+<li>{{Sig2_es_:signer2:signature}}</li>
+</ul>
+<ol>
+<li>Click on New step.</li>
+<li>Search for “Get file content using path.”</li>
+<li>Under File Path, use the Dynamic Content panel to add File Path variable into the field. This will allow you to pass the variable from the HTTP request into the connector.</li>
+<li>Set Infer Content Type to Yes.</li>
+</ol>
+<p>Upload a document and get a document ID</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/07.png" alt=""></p>
+<ol>
+<li>Click on New step.</li>
+<li>In File Name, use the Dynamic Content panel to set the field to the File Name variable from the HTTP request.</li>
+<li>In File Content, use the Dynamic Content panel to add File content variable from OneDrive connector into this field.NOTE: If you are using a different source, such as SharePoint, or OneDrive, you might set your filename to include the file extension to ensure the Adobe Acrobat Sign service recognizes your file type.</li>
+</ol>
+<p>Upload a document and get a document ID</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/08.png" alt=""></p>
+<ol>
+<li>Click on New step.</li>
+<li>Set Agreement Name using the Dynamics Content panel to input the File Name variable from the HTTP request.</li>
+<li>Set your Document ID using the Dynamic Content panel and select Document ID from the list.</li>
+<li>Set Recipient Email using the Dynamic Content panel to the Manager Email variable.</li>
+<li>In Message, set the message that will display in the notification emails.</li>
+<li>Click on Add new parameter.</li>
+<li>Select the following items using checkboxes. These fields will get added to your step. Below the items that look like this should be variables you set using the Dynamic Content panel. You will want to set them with the following settings:</li>
+</ol>
+<ul>
+<li>Recipient Email (2): Employee Email</li>
+<li>Recipient Signing Order (2): 2</li>
+<li>Recipient Role (2): Signer</li>
+<li>Form Field Name (1): EmployeeFirstName</li>
+<li>Form Field Value (1): Employee First Name</li>
+<li>Form Field Name (2): ManagerFullName</li>
+<li>Form Field Value (2): Manager Full Name</li>
+<li>Form Field Name (3): Salary</li>
+<li>Form Field Value (3): Salary</li>
+<li>Form Field Name (4): Start Date</li>
+<li>Form Field Value (4) StartDate</li>
+</ul>
+<p>You should end up with something like this:</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/09.png" alt=""></p>
+<p>If you want to add some more parameters, such as additional signers, fields to merge into the the documents, etc., you can add additional parameters below.</p>
+<p>Click on Save to finally save your Logic App.</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/10.png" alt=""></p>
+<h2 id="testing-your-logic-app">Testing your Logic App</h2>
+<p>Since this flow is triggered using an HTTP request, we can easily test this using Postman.</p>
+<p><img src="/blog/no-code-integration-send-adobe-sign-agreements-using-logic-apps-in-microsoft-azure/11.png" alt=""></p>
+<ol>
+<li>In the Logic App Designer, click on a When HTTP request is received step.</li>
+<li>Click on the Copy button next to the generated URL.</li>
+<li>Open Postman.</li>
+<li>Do an HTTP Request to:</li>
+</ol>
+<ul>
+<li>Method: POST</li>
+<li>URL: URL provided by Logic App</li>
+<li>Body (Sample):{ “Agreement Name”:”Offer Letter”, “Employee First Name”:”John”, “Employee Last Name”:”Echostone”, “Employee Email”:”/*<em>First Email Address</em>/”, “Manager Full Name”:”/*<em>Manager Name</em>/”, “Manager Email”:”/*<em>Second Email Address</em>/”, “Salary”:”/*<em>First Email Address</em>/“, “Start Date”:”5/1/2019”, “File Path”:”/Document.docx”}</li>
+</ul>
+<h3 id="final-thoughts">Final thoughts</h3>
+<p>Logic Apps are an extremely powerful, easy way to create connections between your different cloud apps (including Adobe Acrobat Sign) and your apps in Azure. Consider also looking at some of the ways you can also use the Adobe Creative Cloud connector in Logic Apps to automate things within your creative teams!</p>
+<h3 id="resources">Resources</h3>
+<ul>
+<li>Logic Apps</li>
+<li>Logic Apps Documentation</li>
+<li>Connecting with Azure Functions</li>
+<li>Adobe Acrobat Sign Logic Apps connector</li>
+<li>Adobe Creative Cloud Logic Apps connector</li>
+</ul>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Why You Should Use Adobe Document Generation API with Adobe Sign — Ben Vanderberg</title><meta name="description" content="Adobe Sign, our cloud-based e-signature service, is used by over 50% of the Fortune 500 and is used for contracts, forms, and all sorts of other use-cases. Howe"><meta property="og:title" content="Why You Should Use Adobe Document Generation API with Adobe Sign — Ben Vanderberg"><meta property="og:description" content="Adobe Sign, our cloud-based e-signature service, is used by over 50% of the Fortune 500 and is used for contracts, forms, and all sorts of other use-cases. Howe"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/why-you-should-use-adobe-document-generation-api-with-adobe-sign-2affdaf535a4"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Why You Should Use Adobe Document Generation API with Adobe Sign</h1><span class="meta">September 2, 2021</span><img class="hero-img" src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/01.png" alt=""><div class="article-body"><h2 id="adobe-document-generation-api-provides-a-lot-of-tools-to-automate-documents-that-you-cant-do-just-with-adobe-sign">Adobe Document Generation API provides a lot of tools to automate documents that you can’t do just with Adobe Sign.</h2>
+<p>Adobe Sign, our cloud-based e-signature service, is used by over 50% of the Fortune 500 and is used for contracts, forms, and all sorts of other use-cases. However, there are also areas where Adobe Sign has some limits, and there are excellent reasons why Adobe Sign, combined with Adobe Document Generation API, makes a fantastic combo.</p>
+<p>Adobe Document Generation API is a service included in Adobe PDF Services API that allows you to take your Microsoft Word-based templates and JSON data to merge them into one document with conditional logic, dynamic tables, and other features. In the end, you get a Word or PDF document that can be Adobe Sign-ready. There is even a playground where you can play with Adobe Document Generation API and see how it works.</p>
+<p>In this article, we will explore some of the ways in which Adobe Document Generation API complements Adobe Sign.</p>
+<h2 id="you-can-tag-documents-using-the-same-tools">You can tag documents using the same tools</h2>
+<p><img src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/02.png" alt=""></p>
+<p>For users familiar with using Adobe Sign, there are a number of ways to tag documents. Text Tags allow you to place fields inline in Microsoft Word and other documents. Form fields in PDFs can be read and used by Adobe Sign. Within the Adobe Sign Web UI there is a drag and drop interface. If you are using Adobe Sign API, there is also a way to place fields via X/Y coordinates.</p>
+<p>When you use Adobe Document Generation add-in for Microsoft Word, you can easily tag your documents for both Adobe Document Generation and Adobe Sign at the same. It is available for installation in Microsoft AppSource. It works on both Windows, Mac, and also Microsoft Word Online.</p>
+<p>Not only does Adobe Document Generation add-in allow you to tag your documents for document generation, it allows you to tag documents for Adobe Sign at the same time. Click on Advanced &gt; Adobe Sign and you can add Adobe Sign fields.</p>
+<p>What’s more, if you aren’t quite ready to use Adobe Document Generation API, you can still use it for just tagging your documents for Adobe Sign:</p>
+<ol>
+<li>Open the Adobe Document Generation add-in from the ribbon.</li>
+<li>Click on Get Started.</li>
+<li>Click Continue without JSON data.</li>
+<li>Click on Advanced.</li>
+<li>Expand Adobe Sign.</li>
+</ol>
+<p>From here, you can place fields like Signature fields and even set conditions and place them in your Word documents.</p>
+<h2 id="you-can-set-conditional-sections-of-your-document-templates">You can set conditional sections of your document templates</h2>
+<p><img src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/03.png" alt=""></p>
+<p>Adobe Sign has always allowed you to merge data into form fields, common use-cases with turn-key integrations like Salesforce and Microsoft Dynamics. But if you want to add paragraphs and sections based on data, Adobe Sign doesn’t provide an excellent mechanism to do that and repaginate your document.</p>
+<p>Fortunately, Adobe Document Generation does provide an great way to set conditional sections of a document. Using Conditional Content tags, you can set paragraphs and sections to only show when specific criteria are met. Here are a few examples:</p>
+<ul>
+<li>Only include a paragraph related to California if a customer resides there</li>
+<li>Only include information about a particular product in a contract if the customer is purchasing that product</li>
+<li>Add a particular flag on the document if specific criteria are met, like “High Risk.”</li>
+</ul>
+<p>To add Conditional Content:</p>
+<ol>
+<li>Open Adobe Document Generation add-in in Microsoft Word and either add your sample data or create your schema.</li>
+<li>Click Generate Tags.</li>
+<li>Click on Advanced.</li>
+<li>Expand Conditional content.</li>
+<li>Select the paragraph or the section that you want to set as conditional.</li>
+<li>Under Select records, select the condition you want to test.</li>
+<li>Set the Operator you want to use. In this example &gt;.</li>
+<li>Set the value you want to test.</li>
+</ol>
+<p>You can also learn more here about how to create your own schemas in Microsoft Word with Adobe Document Generation add-in.</p>
+<h2 id="you-can-generate-word-or-pdf-documents">You can generate Word or PDF documents</h2>
+<p>When working with contracts, you may want to merge information into the document, but you may not be quite ready to have the document be a PDF because you may need to redline or edit the document. Adobe Document Generation allows you to merge data into your document and generate it as a PDF or a Word document. By generating it as a Word document, it can still be editable, and then you can upload that Word document to Adobe Sign when you are ready.</p>
+<h2 id="you-can-add-dynamic-tables-and-lists">You can add dynamic tables and lists</h2>
+<p><img src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/04.png" alt=""></p>
+<p>Because Adobe Sign has fixed content, it doesn’t allow you to dynamically grow the size of tables or reduce their size based on data. For example, if you have an invoice or a sales order, you want the number of items listed to grow or shrink based on how many things you include.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Adobe Document Generation API allows you to add tables dynamically based on an array of data in your table. That way, it will grow or shrink the document based on the number of items.</p>
+<h2 id="dynamically-add-images">Dynamically add images</h2>
+<p><img src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/05.png" alt=""></p>
+<p>Adobe Sign has the concept of an image field that you can use to upload images as part of a signing ceremony. Sometimes you may, however, want to change images in a document dynamically. Some reasons why might include:</p>
+<ul>
+<li>Changing logos for different brands but keep the same template</li>
+<li>Add a supporting image as part of a document or contract</li>
+<li>Change colors and branding based on the same template</li>
+</ul>
+<p>Adobe Document Generation API allows you to pass images as part of your data as Base64 so you can dynamically change images in your Word document.</p>
+<p>Here are also some great tips on how best to use images with Adobe Document Generation API.</p>
+<h2 id="both-adobe-sign-and-adobe-document-generation-are-available-in-microsoft-power-automate">Both Adobe Sign and Adobe Document Generation are available in Microsoft Power Automate</h2>
+<p><img src="/blog/why-you-should-use-adobe-document-generation-api-with-adobe-sign/06.png" alt="Adobe PDF Services and Adobe Sign have connectors in Microsoft Power Automate which allow you to seamlessly connect them together."></p>
+<p>Microsoft Power Automate is users of Microsoft 365 create automated workflows without having to write any code. Adobe PDF Services (which includes Adobe Document Generation) is available as connectors within Power Automate, allowing you to easily and seamlessly tie document generation and e-signatures into your flows. There are also an article to help you get started.</p>
+<p>In addition, there are a number of different templates available directly within Microsoft Power Automate which illustrates how to connect them together.</p>
+<h2 id="addremove-optional-signers">Add/remove optional signers</h2>
+<p>You may have agreements that require certain signatories or do not, depending on the criteria. For example, a contract greater than $100K requires a VP signature, while less than $100K does not.</p>
+<p>Using Conditional sections in Adobe Document Generation, you can dynamically add or remove signatories based on criteria, or provide more information about your signers. For example, let’s say your data has information like this:</p>
+<p>In your document, you can then use Conditional content to dynamically add or remove fields depending on how many signers. Here is a snippet of how to do that:</p>
+<p>What you will notice above is the tag is an expression. It might look complex, but here is a breakdown of what it means.</p>
+<ul>
+<li>expr() means that it is going to do an expression or a calculation in the output that is generated.</li>
+<li>$decodeUrlComponent(“%7B%7B S”) is a workaround so that Adobe Document Generation API will render the curly brackets {{ required to show an Adobe Sign tag. If you write those in plain text, they are embedded in other {{}} tags for Document Generation and it will not render. It will also add “S” as the output. At this stage, it renders {{S.</li>
+<li>order passes the signing order so that there is a unique name for the Adobe Sign field. The field will output {{S1 if order=1.</li>
+<li>Then we want to add the <em>es</em>:signer to declare it is an Adobe Sign field and that we are assigning it to a specific signer. The output is {{S1_es_:signer.</li>
+<li>Next, we add order again so that it assigns the field to the specific signer, so the output would be {S1_es_:signer1.</li>
+<li>We then add the :signature to signify this is a signature field. Adobe Sign has other fields like :fullname, :phone, etc. If we add signature, then the output is {{S1_es_:signer1:signature.</li>
+<li>Finally, we need to close the field with }}, so we use the same technique as before and use $decodeUrlComponent(“%7D%7D”). Your output should then look like {{S1_es_:signer1:signature}}.</li>
+</ul>
+<p>If everything is written properly, then if you pass the data from Document Generation API into the template it should look like this:</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Whether it is contracts, agreements, offer letters, sales orders, using Document Generation API with Adobe Sign allows you to dynamically generate your documents from data and send them for signature. For a long time Adobe Sign users, Document Generation API provides greater flexibility with your documents through conditional sections, dynamic tables and lists, dynamic images, and calculations.</p>
+<p>If you would like to learn more about Adobe Document Generation API, go to the Adobe Document Generation API website where you can start a trial. You can also start using the demo playground here. Adobe Sign developer accounts are available here.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

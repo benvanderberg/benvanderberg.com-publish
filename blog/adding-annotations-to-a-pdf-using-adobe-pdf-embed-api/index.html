@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Adding Annotations to a PDF Using Adobe PDF Embed API — Ben Vanderberg</title><meta name="description" content="Have you ever wanted to markup a PDF file interactively with your team the same way you can in Microsoft Office 365 or Google Docs? Well, developers can now int"><meta property="og:title" content="Adding Annotations to a PDF Using Adobe PDF Embed API — Ben Vanderberg"><meta property="og:description" content="Have you ever wanted to markup a PDF file interactively with your team the same way you can in Microsoft Office 365 or Google Docs? Well, developers can now int"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/adding-annotations-to-a-pdf-using-adobe-pdf-embed-api-fb6f85da4c02"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Adding Annotations to a PDF Using Adobe PDF Embed API</h1><span class="meta">July 27, 2020</span><img class="hero-img" src="/blog/adding-annotations-to-a-pdf-using-adobe-pdf-embed-api/01.png" alt=""><div class="article-body"><p>Have you ever wanted to markup a PDF file interactively with your team the same way you can in Microsoft Office 365 or Google Docs? Well, developers can now integrate that capability directly into their existing content management systems. Adobe added an annotations API to the PDF Embed API to allow you to control annotations in your PDFs.</p>
+<p>The concepts in this article build on the core functionality of the PDF Embed API. If you are not familiar with the PDF Embed API, check out this article to get you started.</p>
+<p>The Annotation API supports a variety of markup features including:</p>
+<ul>
+<li>Programmatic importing</li>
+<li>Exporting sticky notes</li>
+<li>Creating</li>
+<li>Deleting</li>
+<li>Updating</li>
+<li>Underlines</li>
+<li>Highlights</li>
+<li>Virtual ink</li>
+</ul>
+<p>This allows developers to store and manage the PDF separately from the annotations and then use the Embed API to bring the PDF and any annotations together into a single view. By integrating this with a content management system, developers can create a system where comments and review cycles are highly managed. You would be able to specify:</p>
+<ul>
+<li>Which users can comment.</li>
+<li>Which comments are visible to different groups of participants.</li>
+<li>Which comments can be deleted or edited and by whom.</li>
+</ul>
+<p>You are only limited by your own imagination. All the necessary events and callbacks are in the Annotation API to create any kind of review service you will need. You can see it in action at this CodePen.</p>
+<p><img src="/blog/adding-annotations-to-a-pdf-using-adobe-pdf-embed-api/02.png" alt="This CodePen allow you to see the Annotation API in action and play with it."></p>
+<p>One important not: In this article, we will create annotations from scratch, but the Annotation API can also read and import annotations from existing PDF files.</p>
+<h2 id="annotation-basics">Annotation Basics</h2>
+<p><img src="/blog/adding-annotations-to-a-pdf-using-adobe-pdf-embed-api/03.png" alt=""></p>
+<p>Before we get started with the basics, there are a few important things to understand:</p>
+<ul>
+<li>When you create an annotation of a page, multiple quadrilaterals are defined to make up a single annotation such as a highlight that spans multiple lines of text.</li>
+<li>PDF annotations sit on top of the page content, they are not defined inline with the text. In fact, they have no relationship to the text other than occupying the same geographic space on the page. This means you can’t search for the word “company” and add a highlight based on those search results. Instead, you need to search for the word, discover it is coordinates on the page, then construct an annotation that uses the same coordinates.</li>
+</ul>
+<h3 id="the-pdf-coordinate-system">The PDF Coordinate System</h3>
+<p>If you are used to working with <canvas> objects in HTML, you will find PDFs function a bit differently:</p>
+<ul>
+<li>Historically PDF came from print, which means it doesn’t use pixels as unit of measurement. Instead, it uses 72 points for every inch on the page. So, if we do the math, an 8.5 in x 11-inch page is 612 pts x 792 pts.</li>
+<li>The origin is not the top-left corner like in HTML. Instead, it is the lower-left corner. .</li>
+</ul>
+<h3 id="annotation-geometry">Annotation Geometry</h3>
+<p>Each annotation will have two of three properties that will be used to draw it on the page, the boundingBox, and either a set of quadPoints or an inkList. The boundingBox defines a rectangle that completely surrounds the annotation. It determines the hit box for the mouse. Regardless of the annotation content, mouse events that occur within the bounding box will trigger a callback if registered. The other two properties are drawing instructions.</p>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>The quadPoints property is an array of float values that define the quadrilaterals that make up a single annotation. In the image below, the three highlighted lines are represented in the quadPoints property as 24 values. When the annotation is selected in the embedded viewer, you can easily see the quadrilaterals.</p>
+<p>The coordinates for each quadrilateral are given in the order x1 y1 x2 y2 x3 y3 x4 y4 specifying the quadrilateral’s four vertices in counterclockwise order. The three quadrilaterals are then combined into a single array. For clarity, I have broken the array into three lines, one for each highlighted line.</p>
+<p>The inkList is like quadPoints in that it uses vertices. However, the inkList is an array of arrays where each item in the outer array is a two-element array representing a vertex, as point, that the embedded viewer uses to paint the annotation. A very, very, small inkList might look like this:</p>
+<h3 id="annotation-binding">Annotation Binding</h3>
+<p>To begin populating the PDF view with annotations, the metaData property of the previewFile object must have an id. That id must be used as the source property of the target in each annotation object. This binds the annotation to the document.</p>
+<p>Annotations can also be created in reply to another annotation, in which case, the target property is set to the annotation that it is in response to. See the documentation for further details.</p>
+<h2 id="getting-started-with-the-annotations-api">Getting Started with the Annotations API</h2>
+<p>The challenge of adding annotations to a page is in generating the quadPoints and the inkList so that the annotation and the relevant text or image are visually associated with each other. But after that, it’s easy. The addAnnotations method accepts the array of annotation objects and then renders them on the page. The single line implementation is below.</p>
+<p>Once the annotations are drawn, the user can interact with them just like annotations that they drew themselves.</p>
+<h2 id="concluding-thoughts">Concluding thoughts</h2>
+<p>Adding annotations to the page is just the first step of creating a real-time collaboration environment using the PDF Embed API. In another article I will cover how to use annotation events to control interactivity and capture new comments in your repository. Stay tuned!</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Epic live streams with live cartoons using Adobe Character Animator with OBS — Ben Vanderberg</title><meta name="description" content="Learn how to add live animated cartoon characters to your OBS livestream using Adobe Character Animator and NDI Tools."><meta property="og:title" content="Epic live streams with live cartoons using Adobe Character Animator with OBS — Ben Vanderberg"><meta property="og:description" content="Learn how to add live animated cartoon characters to your OBS livestream using Adobe Character Animator and NDI Tools."><meta property="og:type" content="website"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Epic live streams with live cartoons using Adobe Character Animator with OBS</h1><span class="meta">December 21, 2021</span><img class="hero-img" src="/images/blog/image-4-1536x1078.png" alt=""><div class="article-body"><p>Ever since Adobe Character Animator came out a few years ago, it has consistently blown my mind. I have watched really cool things like the animated <a href="https://www.youtube.com/watch?v=PD9-zrGxrs4">Donald Trump on Stephen Colbert’s show</a>. At Adobe MAX in 2016, I got to see <a href="https://www.youtube.com/watch?v=nWYBnj1p9wQ">Nancy Cartwright perform Bart Simpson live</a> in front of an audience. The idea of animation being something that you could do live just is mind-boggling.</p>
+<p>Fast forward several years, I am playing more with tools like OBS. I have started to look into how easy it would be to incorporate a live animation along with other things that I am doing using OBS so I set out to discover just how much effort it would take to incorporate Adobe Character Animator with OBS. This allows me to add live characters on a live stream.</p>
+<p>It turns out it is way easier than I even expected. So in this blog, we are going to walk through how you can easily create a character and build it into your scene in OBS. This solution works for both Mac and Windows.</p>
+<h2 id="install-the-right-software">Install the right software</h2>
+<p>There are a few things you are going to need to get this to work:</p>
+<h3 id="obs">OBS</h3>
+<p><a href="https://obsproject.com/">OBS</a>, or Open Broadcasting Software, allows you to mix Character Animator and other media together.</p>
+<p>OBS, or Open Broadcasting Software, is a tool that allows you to live-stream to many different tools like Facebook, Twitch, and many others. It also becomes very handy for live presentations on <a href="https://zoom.us/">Zoom</a>, <a href="https://www.microsoft.com/en-us/microsoft-teams/group-chat-software">Microsoft Teams</a>, and other apps because it allows you to transition between different things, screens very easily.</p>
+<p><img src="/images/blog/OBSDemoApp2610.png" alt="Open Broadcaster Software | OBS"></p>
+<h3 id="adobe-character-animator">Adobe Character Animator</h3>
+<p><a href="https://www.adobe.com/products/character-animator.html">Adobe Character Animator</a> allows you to create characters to animate live. It also includes the ability to use a webcam to track your motion.</p>
+<p>You need to install Adobe Character Animator, which is included as part of the <a href="https://www.adobe.com/creativecloud.html">Adobe Creative Cloud</a> subscription. If you don’t have that but you want to play, you can sign up for a trial at adobe.com. You are also going to want to make sure you have this installed before you install the other items.</p>
+<p><img src="/images/blog/image-2-1536x1024.png" alt="Adobe Character Animator screenshot."></p>
+<h3 id="ndi-tools">NDI Tools</h3>
+<p><a href="https://www.ndi.tv/tools/">NDI Tools</a> is a free set of tools that enables NDI video protocol over Ethernet. NDI has become popular with broadcasters to stream video over a network. It becomes really useful for high-end IP-based cameras as well as for streaming from one computer to another. NDI Tools includes plugins for Adobe Creative Cloud apps like Adobe Character Animator, Adobe Premiere Pro, and Adobe After Effects; this enables you to output playback directly to OBS, which becomes really handy.</p>
+<p><img src="/images/blog/image-3-1536x844.png" alt="NDI Tools screenshot."></p>
+<h3 id="ndi-obs-plugin">NDI-OBS Plugin</h3>
+<p>In order to capture NDI feeds easily into your scene, you need to install the <a href="https://github.com/Palakis/obs-ndi/releases">NDI-OBS plugin</a>. It’s really simple. Just install it, but make sure you restart OBS after you install it if you have it open.</p>
+<h2 id="setup-your-feed-from-character-animator">Setup your feed from Character Animator</h2>
+<p>The first thing to do is make sure NDI Tools plugins are installed in Character Animator.</p>
+<ol>
+<li>Open Adobe Character Animator on your computer.</li>
+<li>Go to Preferences (Edit &gt; Preferences on Windows or Character Animator &gt; Preferences on Mac).</li>
+<li>Go to the Live Output section.</li>
+<li>Ensure that Enable Mercury Transmit is enabled.</li>
+<li>Enable the video device NDI output.</li>
+</ol>
+<p><img src="/images/blog/image.png" alt="Adobe Character Animator preferences showing how to set Live Output to include an NDI output."></p>
+<h2 id="setup-obs">Setup OBS</h2>
+<p>In OBS, you will need to create a new NDI source to take in the input from Character Animator.</p>
+<ol>
+<li>In the Sources panel, click on the + symbol.</li>
+<li>Select NDI Source.</li>
+<li>Set the name of your source.</li>
+<li>Click on OK.</li>
+<li>In the Source name, set it to the NDI source coming from Adobe Character Animator.</li>
+</ol>
+<p><img src="/images/blog/image-6-1536x1188.png" alt="Properties for an NDI Source in OBS."></p>
+<p><img src="/images/blog/image-7-1536x1078.png" alt="OBS showing an NDI source that includes a Character Animator character."></p>
+<p>You should now see the live output coming from Character Animator in your Canvas.</p>
+<p>The great thing is that it also outputs the alpha channel, so this can be great for simulating a live interaction with a cartoon character by having a video input from your webcam and an NDI input from your computer.</p>
+<h2 id="using-multiple-computers">Using multiple computers</h2>
+<p>Adobe Character Animator and OBS can both be resource-intensive, especially if you are also doing encoding for a live stream. This also tends to be more resource-intensive when you are running on a Mac vs. Windows. To resolve this, you can run Adobe Character Animator and OBS on separate computers. NDI is a protocol for streaming video on a network, such as over Ethernet. So as long as your computers are on the same network and you have NDI Tools installed, you should be able to pick up that feed on another computer. However, I recommend that you have a 1Gbps wired ethernet connection to eliminate any lag.</p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>If you ever watched movies like Mary Poppins and wished “I wish I could create a video where I get to talk to a cartoon character”, then this is a great way to make that not only a reality but something you can live stream on YouTube, LinkedIn or even your video conferencing meetings.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

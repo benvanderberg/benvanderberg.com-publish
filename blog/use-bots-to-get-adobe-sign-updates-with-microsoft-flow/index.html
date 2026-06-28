@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Use Bots to Get Adobe Acrobat Sign Updates with Microsoft Teams — Ben Vanderberg</title><meta name="description" content="Ever have your boss send you a text to ask for an update instead of looking it up themselves? As it relates to Adobe Acrobat Sign, this is often my manager aski"><meta property="og:title" content="Use Bots to Get Adobe Acrobat Sign Updates with Microsoft Teams — Ben Vanderberg"><meta property="og:description" content="Ever have your boss send you a text to ask for an update instead of looking it up themselves? As it relates to Adobe Acrobat Sign, this is often my manager aski"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/use-bots-to-get-adobe-sign-updates-with-microsoft-flow-ee29e0f58e7f"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Use Bots to Get Adobe Acrobat Sign Updates with Microsoft Teams</h1><span class="meta">May 20, 2019</span><img class="hero-img" src="/blog/use-bots-to-get-adobe-sign-updates-with-microsoft-flow/01.png" alt=""><div class="article-body"><p>Ever have your boss send you a text to ask for an update instead of looking it up themselves? As it relates to Adobe Acrobat Sign, this is often my manager asking “Hey, do we have any updates on the contract?”</p>
+<p><img src="/blog/use-bots-to-get-adobe-sign-updates-with-microsoft-flow/02.png" alt="Messages from your boss often prompt you to have to look up in your apps to answer."></p>
+<p>To reply to this, I would have to log into Adobe Acrobat Sign to check whether a person has signed the contract yet and then reply to the message.</p>
+<p>With Adobe Acrobat Sign for Microsoft Teams, there is a much easier way to reply. When you add the Adobe Acrobat Sign App in Microsoft Team, you can add the Adobe Acrobat Sign bot to your channel and check the status right in the context of the conversation. This eliminates a whole bunch of clicks and steps to answer you manager.</p>
+<h2 id="what-you-need">What You Need</h2>
+<ul>
+<li>Adobe Acrobat Sign</li>
+<li>Adobe Acrobat Sign for Microsoft Teams</li>
+<li>Microsoft Teams</li>
+<li>Microsoft Power Automate</li>
+</ul>
+<h2 id="installation-notes">Installation Notes</h2>
+<p>In order for the Adobe Acrobat Sign bot to work within a channel, you will need to add it to your channel during installation.</p>
+<p><img src="/blog/use-bots-to-get-adobe-sign-updates-with-microsoft-flow/03.png" alt="Screenshot how to install Adobe Acrobat Sign inside of Microsoft Teams."></p>
+<p>Within Microsoft Teams, click the Ellipsis … menu on the left sidebar and select More apps.</p>
+<p><img src="/blog/use-bots-to-get-adobe-sign-updates-with-microsoft-flow/04.png" alt="Screenshot of Microsoft Teams Store."></p>
+<p>In the Store, you will see Adobe Acrobat Sign and Adobe Creative Cloud listed. You can also install from App Source.</p>
+<p><img src="/blog/use-bots-to-get-adobe-sign-updates-with-microsoft-flow/05.png" alt="Installation for Adobe Acrobat Sign in Microsoft Teams."></p>
+<p>You can then choose to install Adobe Acrobat Sign for yourself individually or a specific channel.</p>
+<h2 id="getting-update-on-agreements-from-channel">Getting Update on Agreements (from Channel)</h2>
+<p>To get the update on an agreement from within a channel, you can look up that information by typing:</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>@Adobe Adobe Sign check status</p>
+<p>Adobe Acrobat Sign will reply “What is the name of the document you are checking on?”</p>
+<p>Then, you can reply with the name of the agreement:</p>
+<p>@Adobe Acrobat Sign Catering Contract</p>
+<p>Adobe Acrobat Sign will reply with an update on that document:</p>
+<p>For more information on the integration, see the docs here.</p>
+<h2 id="push-notifications-to-microsoft-teams-using-microsoft-power-automate">Push Notifications to Microsoft Teams Using Microsoft Power Automate</h2>
+<p>If you want to have a bit more tailored notifications into your Channels, such as when agreements are signed, viewed, etc., you can send that notification to Microsoft Teams using Microsoft Power Automate, formerly Microsoft Flow.</p>
+<p>To make this easy to set this up, you can use the Microsoft Power Automate template to send a Microsoft Teams message when an agreement is signed here.</p>
+<p>UPDATE (2/19/2020): Updated article to reflect Microsoft Flow brand is now changed to Microsoft Power Automate.</p>
+<p>Follow the Adobe Tech Blog for more developer stories and resources, and check out Adobe Developers on Twitter for the latest news and developer products.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

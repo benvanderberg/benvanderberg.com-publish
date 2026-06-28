@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Add PDF Protection to a PDF in Microsoft SharePoint — Ben Vanderberg</title><meta name="description" content="In my previous article, I walked through how you can automatically make documents searchable when they are dropped in a folder. But what if you want to select a"><meta property="og:title" content="Add PDF Protection to a PDF in Microsoft SharePoint — Ben Vanderberg"><meta property="og:description" content="In my previous article, I walked through how you can automatically make documents searchable when they are dropped in a folder. But what if you want to select a"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint-db2209657f1a"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Add PDF Protection to a PDF in Microsoft SharePoint</h1><span class="meta">April 19, 2021</span><img class="hero-img" src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/01.png" alt=""><div class="article-body"><p>In my previous article, I walked through how you can automatically make documents searchable when they are dropped in a folder. But what if you want to select a file and do a custom action to it, like add PDF protection to a PDF?</p>
+<p>Adobe PDF Tools for Microsoft Power Automate allows you to easily create flows for all your document-related processes, such as OCR, creating PDFs, combining PDFs, etc. One benefit is adding password protection to view or adding granular controls to prevent printing, copying, etc.</p>
+<p>Microsoft Power Automate is an automation service included as part of Microsoft 365 allowing you to automate a variety of actions, including a trigger that allows you to start actions when you select files or items in SharePoint.</p>
+<p>In this article, we are going to walk through setting up an automation so that selecting a file in SharePoint triggers an action to OCR the document using Adobe PDF Tools.</p>
+<h1 id="what-you-will-need">What You Will Need</h1>
+<p>· Adobe PDF Tools (you can get a free trial here. Note: you can get a free 6 month trial.)</p>
+<p>· Microsoft Power Automate (you will need premium licensing to take advantage of PDF Tools)</p>
+<h1 id="create-your-adobe-pdf-tools-credentials">Create your Adobe PDF Tools credentials</h1>
+<p>If you haven’t already created credentials to use with your Adobe PDF Tools, you can create them here.</p>
+<p>Once you provide a name and description, your client credentials will be generated. Keep this window open; you will need this information to create a connection in Microsoft Power Automate.</p>
+<h1 id="create-a-flow-from-a-template">Create a flow from a template</h1>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/02.png" alt=""></p>
+<p>Adobe PDF Tools has a variety of templates already made to make it easy for you to get started. We are going to use one of these for this example.</p>
+<ol>
+<li>
+<p>Log into Microsoft Power Automate.</p>
+</li>
+<li>
+<p>Use this template to get started. We are going to modify it and simplify it to suit our needs.</p>
+</li>
+<li>
+<p>You will need to create a connection to PDF Tools.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/03.png" alt=""></p>
+<ol start="4">
+<li>Click Continue.</li>
+</ol>
+<h2 id="modifying-template">Modifying template</h2>
+<p>Now that you have all your connections, you only need to make a few changes to get this template working.</p>
+<ol>
+<li>
+<p>Click on For a selected file trigger action to expand the step if it’s not already expanded.</p>
+</li>
+<li>
+<p>Click + Add an input.</p>
+</li>
+<li>
+<p>Select Text.</p>
+</li>
+<li>
+<p>Set the name of the input to Password.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/04.png" alt=""></p>
+<ol start="5">
+<li>
+<p>Delete the Get my profile (V2) by clicking on the … menu and select Delete.</p>
+</li>
+<li>
+<p>Delete the Send an email (V2) by clicking on the … menu and select Delete.</p>
+</li>
+<li>
+<p>In the trigger For a selected file, set your Site Address to the SharePoint site you wish to use. Repeat this step for Get file properties action and Get file content action.</p>
+</li>
+<li>
+<p>Set the field Library Name to your specified Document Library. You will need to do this for both the For a selected file and Get file properties actions.</p>
+</li>
+<li>
+<p>Delete the Convert PDF to Word action by clicking on the … menu and selecting Delete.</p>
+</li>
+<li>
+<p>Click the + New step button to add the Protect PDF from Viewing (preview) or Protect PDF from Copying, Editing and Printing (preview) action.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/05.png" alt=""></p>
+<ol start="11">
+<li>
+<p>Using the Dynamic Content popup, set the File Name to the fileName variable from the For a selected file action.</p>
+</li>
+<li>
+<p>Using the Dynamic content popup, set the File Content to the File Content variable from the Get file content action.</p>
+</li>
+<li>
+<p>Using the Dynamic content popup, set the Password to the Password variable from the For a selected file action.</p>
+</li>
+<li>
+<p>Now you need to add a step to save over the file in SharePoint. Click on + New step at the bottom of the flow and search for SharePoint. Then select Update file.</p>
+</li>
+<li>
+<p>In the Update file action, set the Site Address to your SharePoint site.</p>
+</li>
+<li>
+<p>Use the Dynamic content menu to set the File identifier to the ID variable from Get file properties action.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/06.png" alt=""></p>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/07.png" alt=""></p>
+<ol start="17">
+<li>
+<p>Set the File Content to the PDF File Content variable from Convert PDF to Word action.</p>
+</li>
+<li>
+<p>Finally, set your Flow name to “Add Password Protection.”</p>
+</li>
+<li>
+<p>Click Save.</p>
+</li>
+</ol>
+<h1 id="try-it">Try it</h1>
+<p>Now that the action is set up, you can use it within your SharePoint document library.</p>
+<ol>
+<li>
+<p>Go to your SharePoint website.</p>
+</li>
+<li>
+<p>Select the file you would like to add password protection to.</p>
+</li>
+<li>
+<p>Click Automate in the ribbon and select your flow.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/08.png" alt=""></p>
+<ol start="4">
+<li>
+<p>Click Continue.</p>
+</li>
+<li>
+<p>In the Password field, enter the password you would like to set for your document.</p>
+</li>
+<li>
+<p>Click Run flow.</p>
+</li>
+<li>
+<p>Once the updated file is saved, you will see it has been modified.</p>
+</li>
+<li>
+<p>Open the PDF and you will see that you are now prompted to enter a password.</p>
+</li>
+</ol>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/09.png" alt=""></p>
+<p>Want a better PDF viewing experience like what you get with Adobe Acrobat Reader in Microsoft SharePoint? Adobe Document Cloud PDF Experience provides a wonderful way to view PDFs using Acrobat’s renderer in SharePoint without needing to download PDFs. It also gives you the ability to comment and review PDFs.</p>
+<h1 id="pro-tips">Pro Tips</h1>
+<h2 id="try-other-pdf-tools-actions">Try other PDF Tools actions</h2>
+<p>Based on this action flow of triggering when a file is selected, have a look at some of the other available actions, such as:</p>
+<p>· Convert PDF to PowerPoint</p>
+<p>· Convert PDF to Word</p>
+<p>· Convert Document to PDF</p>
+<p>· Compress PDF</p>
+<h2 id="use-these-with-other-adobe-actions">Use these with other Adobe actions</h2>
+<p>Adobe Sign and Adobe Creative Cloud connectors are also available within Microsoft Power Automate and allow you to create similar Flows.</p>
+<h2 id="trigger-flow-on-multiple-items">Trigger flow on multiple items</h2>
+<p><img src="/blog/add-pdf-protection-to-a-pdf-in-microsoft-sharepoint/10.png" alt=""></p>
+<p>You can select multiple items in SharePoint and trigger your flow. This is a fantastic way to perform bulk actions like OCR, convert, compress, etc. on several items all at once. One important note is that each file is considered a separate flow trigger, so you won’t be able to relate them to each other when you select them all at once.</p>
+<h2 id="trigger-selected-files-in-onedrive-dynamics-and-others">Trigger selected files in OneDrive, Dynamics, and others</h2>
+<p>You aren’t limited to selected files in SharePoint. You can also use selected list items, OneDrive files, items in Dynamics, and others. You can even use these functions with Power Apps, giving you the freedom to create whatever you want!</p>
+<h1 id="concluding-thoughts">Concluding thoughts</h1>
+<p>Adobe PDF Tools API really gives you the flexibility to do whatever document actions you need with your PDFs. Combined with Microsoft Power Automate, this gives you a huge amount of flexibility to create automated actions while working in tools like SharePoint, and it is easy to configure.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

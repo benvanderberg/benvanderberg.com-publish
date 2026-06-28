@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Detect Untagged PDFs for Accessibility with Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="PDF documents come in a lot of different shapes and sizes. Unfortunately, many PDF libraries do not optimize PDF documents for accessibility, which helps people"><meta property="og:title" content="Detect Untagged PDFs for Accessibility with Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="PDF documents come in a lot of different shapes and sizes. Unfortunately, many PDF libraries do not optimize PDF documents for accessibility, which helps people"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate-85acb970345c"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Detect Untagged PDFs for Accessibility with Microsoft Power Automate</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/01.png" alt=""><div class="article-body"><h2 id="use-metadata-in-pdf-documents-to-automate-document-workflows">Use metadata in PDF documents to automate document workflows.</h2>
+<p>PDF documents come in a lot of different shapes and sizes. Unfortunately, many PDF libraries do not optimize PDF documents for accessibility, which helps people with disabilities use screen readers to reliably read PDF content. Untagged PDFs do not meet many of the legal standards of accessibility, and PDF tagging is often overlooked when documents are published.</p>
+<p>Adobe PDF Services can be used to identify PDF documents that are not tagged. Using the Adobe PDF Services connector in Microsoft Power Automate allows you to get metadata about your PDF documents that can help flag documents and determine what processing you need to complete on the PDF.</p>
+<p>Here are some of the data elements that are provided that can be used to help inform the logic in your workflow:</p>
+<p>For this scenario, there are a few items we can use to help identify whether a document has characteristics that show that it is optimized for screen readers:</p>
+<ul>
+<li>is_tagged: Determines whether the document contains tags in the context for screenreaders.</li>
+<li>pdfua_compliance_level: Whether the document declares itself as PDF/UA compliant (PDF/UA is the open standard for accessible PDF documents).</li>
+</ul>
+<p>Important disclaimer: This metadata will tell you if the document has a tag tree embedded and whether the PDF identifies itself as PDF/UA compliant, but that doesn’t determine the quality tags in the document. This should not be the only step for your organization to check and remediate documents, but it can be a helpful indicator of documents that are missing key elements.</p>
+<h2 id="scenario">Scenario</h2>
+<p>In this scenario, we are creating a flow that when a PDF is dropped in a folder, it will use Adobe PDF Services to get the PDF properties to check whether the document is tagged or not or a PDF/UA document. If not, it will change the metadata in SharePoint to flag that document.</p>
+<h2 id="setup-sharepoint">Setup SharePoint</h2>
+<p>In SharePoint, we have a Document Library that has a column called “Status,” which contains the choice of “PDF/UA,” “Not Tagged,” or “Approved.”</p>
+<p>For this demo, we will use a column in the Document Library to update if the document is accessible or not.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/02.png" alt="For this demo, we will use a column in the Document Library to update if the document is accessible or not."></p>
+<h2 id="pre-requisites">Pre-requisites</h2>
+<ul>
+<li>Adobe PDF Services key, which you can get a free trial here</li>
+<li>Microsoft Power Automate with access to Premium connectors</li>
+<li>Microsoft SharePoint*</li>
+</ul>
+<p>*You do not strictly need to use Microsoft SharePoint as Microsoft Power Automate also has connectors for BOX, Dropbox, OneDrive, and a variety of other connectors.</p>
+<h2 id="building-your-flow">Building Your Flow</h2>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/03.png" alt=""></p>
+<p>This flow scenario uses two connectors: SharePoint and Adobe PDF Services. Here is the breakdown of each of the steps:</p>
+<h3 id="when-a-file-is-created-in-a-folder-sharepoint">When a file is created in a folder (SharePoint)</h3>
+<p>This is the trigger of the flow which will start when a file is dropped in the specified folder. In this case, we have a folder called “Accessible Docs” in the SharePoint site.</p>
+<h3 id="get-file-content-sharepoint">Get file content (SharePoint)</h3>
+<p>This action gets the file content of the PDF stored in SharePoint. This will be used in a future step to pass to Adobe PDF Services. In the File Identifier field, you can set it to x-ms-file-id from variable from the trigger.</p>
+<h3 id="get-file-metadata-using-path-sharepoint">Get file metadata using path (SharePoint)</h3>
+<p>In this action, we are getting the metadata about the document in SharePoint, including columns and information about the document. Your file path is the x-ms-file-path-encoded variable.</p>
+<h3 id="get-pdf-properties-adobe-pdf-services">Get PDF Properties (Adobe PDF Services)</h3>
+<p>This action will allow you to get information about your PDF, like the information shown earlier in this article. If this is your first time using Adobe PDF Services, you can get a free trial here to create your key. For the inputs:</p>
+<ul>
+<li>Input File Name: It can be whatever name you want it to be as long as it ends with PDF.</li>
+<li>Input File Content: Set this to be the File content from the Get file content step.</li>
+<li>Get Properties Page Level: This gets information like whether there are images, whether it is scanned, etc., for each page. We do not need this information for this scenario, but it is helpful to check out.</li>
+</ul>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/04.png" alt=""></p>
+<h3 id="condition-if-pdf-tagged">Condition: If PDF Tagged</h3>
+<p>In the next step, we want to have a condition to determine whether the PDF is tagged or not. If it is, then we want to change the status in SharePoint to “Tagged.” If yes, then we will check if the document is a PDF/UA document and if it is set as PDF/UA status. If not either, then Untagged. This can then be used to report which ones absolutely need to be reviewed.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>In this condition, we want to use the Dynamic content panel to set the condition to PDF Tagged is equal to true.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/05.png" alt=""></p>
+<p>When you create the condition, it creates a path for “Yes” and “No.”</p>
+<h3 id="if-yes-if-pdf-tagged">If Yes: If PDF Tagged</h3>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/06.png" alt=""></p>
+<p>Under If Yes, we want to check to see if the PDF identifies itself as PDF/UA-1 compliant. If yes, then we want to change the Status to PDF/UA. If not, then we want to set it to Tagged.</p>
+<h3 id="update-file-properties">Update file properties</h3>
+<p>Under both, If yes and If no, we want to add an Update file properties action. Both of them will have the same Site Address and Library Name as in previous SharePoint actions in the flow.</p>
+<p>For the Id, set both of them to the ItemId variable from the Get file properties action in the previous steps.</p>
+<p>Under the If yes path, set the Status Value to PDF/UA. Under the If no path, set Status Value to Tagged.</p>
+<h3 id="if-no-if-pdf-tagged">If No: If PDF Tagged</h3>
+<p>If the PDF is not tagged, then we want to add an Update file properties action to change the Status value in SharePoint to Not Tagged.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/07.png" alt=""></p>
+<h3 id="test-your-flow">Test your flow</h3>
+<p>Now that you have that setup, you can save your flow and test. When using SharePoint, where your trigger is dropping into a folder, it is recommended that you click the Test &gt; Manually button in Power Automate as it triggers SharePoint to check more often. Otherwise, those updates are not as instant.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/08.png" alt=""></p>
+<p>You can test your flow by dropping your files into the specified SharePoint folder. If successful, you should be able to see the status change based on whether your document is tagged or not.</p>
+<h3 id="how-to-manually-check-in-adobe-acrobat-dc">How to manually check in Adobe Acrobat DC</h3>
+<p>If you want to check this information manually in your PDF documents, you can do that by opening your document in Adobe Acrobat DC:</p>
+<p>To check whether the document identifies as conforming to the PDF/UA-1 standard, click on the Standards button in the sidebar:</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/09.png" alt=""></p>
+<p>If you want to check whether the document is tagged or not, there are two ways. The first way is to look at your File Properties by going to File &gt; Properties and selecting the Description tab.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/10.png" alt="Document Properties menu allows you to see information about the document."></p>
+<p>The second way is to see is using your the Tag sidebar, where you can see if there is a Tag tree in the document.</p>
+<p>The tag sidebar allows you to see the tag structure in the PDF document.</p>
+<p><img src="/blog/detect-untagged-pdfs-for-accessibility-with-microsoft-power-automate/11.png" alt="Tag sidebar allows you to see the tag structure in the PDF document."></p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>Adobe PDF Services provides a great way to be able to get information about your PDFs to help inform how you want to automate those PDFs. Being able to detect what documents are tagged can help identify which ones need to get remediated, which can be done with Adobe Acrobat DC.</p>
+<p>To get started using Adobe PDF Services, try the service and get started using it within Microsoft Power Automate.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

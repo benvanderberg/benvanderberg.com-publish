@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Creating Microsoft PowerApps with Adobe Sign — Ben Vanderberg</title><meta name="description" content="If you have been paying attention to what Microsoft has been doing with their Power platform in recent years, it is quite impressive. Microsoft PowerApps is a s"><meta property="og:title" content="Creating Microsoft PowerApps with Adobe Sign — Ben Vanderberg"><meta property="og:description" content="If you have been paying attention to what Microsoft has been doing with their Power platform in recent years, it is quite impressive. Microsoft PowerApps is a s"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/creating-microsoft-powerapps-with-adobe-sign-3fbed7e5707d"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Creating Microsoft PowerApps with Adobe Sign</h1><span class="meta">June 21, 2019</span><img class="hero-img" src="/blog/creating-microsoft-powerapps-with-adobe-sign/01.png" alt=""><div class="article-body"><p>If you have been paying attention to what Microsoft has been doing with their Power platform in recent years, it is quite impressive. Microsoft PowerApps is a set of tools to allow you to easily create low-code apps within a web browser that allow you to use them on web and mobile. These apps also connect with all of the connectors inside of Microsoft Flow.</p>
+<p>So often I see the main reason users haven’t adopted electronic document workflows is because it adds a hassle to their process. If an employee has three or four apps they have to use just to get their job done, adding another is just unacceptable, so they will go with what they know… paper. If only there was a way to connect those different systems while also being able to create solutions to make it paperless.</p>
+<p>This is where Microsoft PowerApps and integration with Adobe Sign can enable really easy ways to empower workers on tablets, phones, etc. to create easy interactive forms, capture signatures, and connect with all of your different systems of record.</p>
+<p>To help you with this, here is a guide of some of the easy ways to connect your PowerApps to Adobe Sign. For this guide, we will be focusing on using Adobe Sign with a Canvas app. This guide assumes already basic knowledge of creating a new PowerApp, but there are some good guides for that here.</p>
+<h2 id="what-you-need">What you need</h2>
+<ul>
+<li>Microsoft PowerApps Canvas app</li>
+<li>Adobe Sign</li>
+</ul>
+<h2 id="connecting-to-adobe-sign">Connecting to Adobe Sign</h2>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/02.png" alt=""></p>
+<p>First, we need to make sure we can connect our app to Adobe Sign. To do this, we need to add a new connector:</p>
+<ol>
+<li>In the Ribbon, go to View &gt; Data Sources.</li>
+<li>Click on + Add data source.</li>
+<li>Click on New connection.</li>
+<li>In the list of connections, select Adobe Sign.</li>
+<li>Click Create.</li>
+<li>Log into Adobe Sign using your credentials to connect to Adobe Sign. If you do not have one, you can create a trial here (sign up for Enterprise).</li>
+</ol>
+<h2 id="viewing-agreements">Viewing agreements</h2>
+<h3 id="get-agreements">Get agreements</h3>
+<p>Now you have a connection to Adobe Sign, let’s see how we can connect to Adobe Sign to get a list of Agreements.</p>
+<ol>
+<li>Create a new Gallery using Insert &gt; Gallery from Ribbon. For this example, we are going to use a Vertical Gallery.</li>
+<li>Select the new Gallery. Rename it AgreementList.</li>
+<li>In the Properties panel, go to Advanced section.</li>
+<li>In the Items field, enter:</li>
+</ol>
+<p>You will now see that the gallery has been populated with a bunch of records.</p>
+<p>We can set the fields for each row reference the data pulled from Adobe Sign. In this example, let’s set a field to the name of the agreement.</p>
+<ol>
+<li>Select a field in the row, such as the title field.</li>
+<li>In the Properties panel, go to Advanced section.</li>
+<li>In the Text field, enter:</li>
+</ol>
+<p>It should end up looking something like this:</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/03.png" alt=""></p>
+<p>Here are some of the other fields available:</p>
+<ul>
+<li>name stringName of the agreement</li>
+<li>status stringStatus of the agreement</li>
+<li>agreementId stringUnique agreement ID for the agreement</li>
+<li>displayDate date The display date for the agreement</li>
+<li>latestVersionId stringA version ID which uniquely identifies the current version of the agreement</li>
+<li>displayUserSetInfos array of DisplayUserSetInfoThe most relevant current user set for the agreement. It is typically the next signer if the agreement is from the current user, or the sender if received from another user</li>
+</ul>
+<p>You can see a full list of the documentation here:<a href="https://docs.microsoft.com/en-us/connectors/adobesign/">https://docs.microsoft.com/en-us/connectors/adobesign/</a></p>
+<h3 id="viewing-agreements-1">Viewing agreements</h3>
+<p>If you want to see a PDF preview of an Adobe Sign agreement from within PowerApps, you can use the PDF viewer. In the example, we are going to leverage the AgreementsList gallery in the previous section and use the selected item to view the agreement.</p>
+<ol>
+<li>Insert a PDF Viewer from Insert &gt; Controls &gt; PDF Viewer from the Ribbon.</li>
+<li>Select the new PDF Viewer control.</li>
+<li>Rename the control to AgreementViewer.</li>
+<li>In the Properties panel, switch to Advanced.</li>
+<li>In the Document field, enter the following:</li>
+</ol>
+<p>Just to understand the call we are making, we are calling Adobe Sign API and requesting the combined PDF. To pass the Agreement ID it needs, we pull it from the selected item in the AgreementList gallery.</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/04.png" alt=""></p>
+<h2 id="sending-agreements">Sending agreements</h2>
+<p>Now that we know how to view agreements, let’s get an idea of how we can send an agreement using Adobe Sign from within PowerApps. In order to do this, let’s create a new Screen.</p>
+<p>For this next part, we are going to walk through how we can create a Send Screen.</p>
+<h3 id="prepare-your-screen">Prepare your screen</h3>
+<p>To start, add a text field and label for RecipientName, RecipientEmail, and AgreementName. Rename the fields to these names.</p>
+<p>You should get something like this:</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/05.png" alt=""></p>
+<h3 id="send-agreements-using-powerapps-and-flow">Send agreements using PowerApps and Flow</h3>
+<p>In order to send an agreement from PowerApps, you are going to want to create a Microsoft Flow. While you can technically send one directly calling the CreateAgreement actions from the Adobe Sign connector, however using Flow gives you more flexibility to set conditions, add lookups to other systems, and is a more intuitive UI instead of writing code.</p>
+<p>There are a number of ways you can send a document for signature:</p>
+<ul>
+<li>Using a URL to a document</li>
+<li>Using a Library template in Adobe Sign</li>
+<li>Uploading a document from a storage location like SharePoint, BOX, etc. and then sending for signature.</li>
+</ul>
+<p>In this example, we are going to send an agreement using a document from a library.</p>
+<ol>
+<li>Go to Actions &gt; Flows in the Ribbon.</li>
+<li>Click on Create a new flow.</li>
+<li>Rename the Flow to SendForSignature (or anything you like).</li>
+<li>Click New step.</li>
+<li>Search for Adobe Sign.</li>
+<li>Select in the Actions list Create an agreement from a library template and send for signature.</li>
+<li>Rename the action to SendAgreement.</li>
+<li>Click into the Agreement Name field.</li>
+<li>In the Dynamic Content panel, select Ask in PowerApps.</li>
+<li>In Document Library Template field, select your desired Library Template. If you haven’t uploaded one, you learn how to here.</li>
+<li>In the Recipient Email field, in the Dynamics Content panel, click Show more and select Ask in PowerApps.</li>
+</ol>
+<p>You can also set a number of other settings by clicking on Show Advanced Options.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Finally, it is a good idea to return the agreement ID back to PowerApps so you can use it for reference with other calls.</p>
+<ol>
+<li>Click New step.</li>
+<li>Search for PowerApps.</li>
+<li>Select PowerApps.</li>
+<li>Select Respond to PowerApps.</li>
+<li>Click Add an output.</li>
+<li>Click Text.</li>
+<li>Set the title to AgreementID.</li>
+<li>In the value, select Agreement ID in the Dynamic Content panel.</li>
+<li>Click Save.</li>
+</ol>
+<p>Your workflow should now look something like this.</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/06.png" alt=""></p>
+<p>Finally, we are going to configure our button to send an agreement.</p>
+<ol>
+<li>Select your SendForSignature button.</li>
+<li>Back in PowerApps, go to Action &gt; Flows in the Ribbon.</li>
+<li>Select your SendForSignature flow.</li>
+<li>In the OnSelect property, set it to the following:</li>
+</ol>
+<p>What this is doing is calling the Flow and passing the parameters, which are the value in the AgreementName and Email fields, that were specified in the Flow. The agreement ID is returned from the Flow, which we are storing in the AgreementID variable.</p>
+<p>You should now be able to preview your PowerApp, enter your agreement name and email, and click your button to send it for signature. You can test it by checking the email you specify in Recipient Email field to see if you received an email.</p>
+<h2 id="getting-signing-url">Getting signing URL</h2>
+<p>In some scenarios, you may want to actually create an app which allows you to host a signature. Some scenarios might be areas such as signing release forms, model releases, hiring forms, etc.</p>
+<p>Adobe Sign for Microsoft Flow connector and PowerApps does not expose the Get Signing URL API. To do this with your app, we are going to have to make a custom HTTP request.</p>
+<h3 id="caution-and-disclaimer">CAUTION AND DISCLAIMER</h3>
+<p>Some background and little bit of word of caution: Electronic signatures don’t typically work the same way as your conventional wet signatures. To uniquely identify each signer, Adobe Sign uses an email address for the recipient. When you use the signing URL, you are circumventing the first level of identity verification that is built into Adobe Sign, which is to verify that a person receives an email address. However, the audit report will show that this signature was hosted by which user you set to get the signing URL.</p>
+<p>One other thing that you can choose to consider is to utilize one of Adobe Sign’s identity verification methods such as password, phone authentication, Social ID (LinkedIn, etc), Government ID, or other types.</p>
+<h3 id="configuring-microsoft-flow">Configuring Microsoft Flow</h3>
+<p>For this, we are going to extend upon the Microsoft Flow that we created in our previous steps.</p>
+<ol>
+<li>Open your SendForSignature Flow.</li>
+<li>At the top of your Flow after the trigger, add an Initialize variable step. Rename it integrationKey and set the following settings:- Name of Step: integrationKey- Name: integrationKey- Type: String- Value: Create an integration key here. Like this (including Bearer):Bearer abcdefg1234</li>
+<li>Add another Initialize variable step with the following settings:- Name of Step: statusCode- Name: statusCode- Type: Integer- Value: 404</li>
+<li>Add another Initialize variable step with the following settings:- Name of Step: signingURL- Name: signingURL- Type: String- Value:</li>
+<li>Add a new step after SendAgreement which is a Do Until step.</li>
+<li>Set the Do Until step to be the variable statusCode is not equal to 404.</li>
+<li>Inside of the Do Until step, add an HTTP action with the following settings:Name of Step: Get Signing URLMethod: GETURI: <a href="https://secure.na1.echosign.com/api/rest/v6/agreements/%7BagreementID%7D/signingUrlsHeaders">https://secure.na1.echosign.com/api/rest/v6/agreements/{agreementID}/signingUrlsHeaders</a>: Authorization: Bearer {integrationKey} In the call settings above, replace {agreementID} with the Agreement ID value that comes from the SendAgreement step. Put your integration key in the value that you set in your previous variable called integrationKey.</li>
+<li>Now, create a Set Variable action after the HTTP request with the following settings:Name: errorCodeValue: Status code from HTTP request.</li>
+<li>In your Respond to PowerApps step, add a new Output with the type Text.</li>
+<li>Name the field SigningURL.</li>
+<li>Click into the value field.</li>
+<li>In the Dynamic Content panel, switch to Expression and set the following expression:</li>
+</ol>
+<p>What this will do is it gets the Signing URL from the HTTP request for the first signer.</p>
+<p>Your Flow should now look like this:</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/07.png" alt=""></p>
+<h3 id="update-powerapps-run-request">Update PowerApps run request</h3>
+<p>Now, as the final step, you need to update in PowerApps.</p>
+<ol>
+<li>Select your Send for Signature button.</li>
+<li>In the OnSelect property, change it to:</li>
+</ol>
+<p>This is setting a variable called AgreementID to be set based on the result of the Flow.</p>
+<p>If you want to set it to send the signer to the signing URL, you can set the button to the following:</p>
+<h2 id="storing-signed-documents-after-signature">Storing signed documents after signature</h2>
+<p>If you want to store your signed documents in SharePoint or another connector, look no further than the Adobe Sign connectors for Microsoft Flow. Here are some of the common templates.</p>
+<p>Based on templates, you can actually add to your Flow the trigger and connector to make it look something like this:</p>
+<p><img src="/blog/creating-microsoft-powerapps-with-adobe-sign/08.png" alt=""></p>
+<h2 id="summary">Summary</h2>
+<p>Microsoft PowerApps and Adobe Sign are a powerful combination to enable you to create real productivity apps for your teams without having to depend on expensive development. Once you get started, the possibilities are endless to how you can make daily tasks much faster!</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>Adobe Sign trial</li>
+<li>Getting Started with Microsoft PowerApps</li>
+<li>Create an Integration Key</li>
+<li>Adobe Sign Connector for Microsoft Flow</li>
+</ul>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

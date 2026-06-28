@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Use Fragments with Adobe Document Generation for Contract Elements with Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="Whether you are creating contracts, offer letters, whitepapers, or other things, one of the common challenges is that elements get reused across different docum"><meta property="og:title" content="Use Fragments with Adobe Document Generation for Contract Elements with Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="Whether you are creating contracts, offer letters, whitepapers, or other things, one of the common challenges is that elements get reused across different docum"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate-64a1f1119fad"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Use Fragments with Adobe Document Generation for Contract Elements with Microsoft Power Automate</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/01.jpeg" alt=""><div class="article-body"><p>Whether you are creating contracts, offer letters, whitepapers, or other things, one of the common challenges is that elements get reused across different documents, such as contract clauses, specific formattings like addresses, social security format, tags, or blurbs.</p>
+<p>Adobe Document Generation API already provides the ability to create fragments. These allow you to take data that you pass to Adobe Document Generation API and have pre-made content fragments that you use across documents that can insert the data you pass into the document. With the Adobe PDF Services connector for Microsoft Power Automate, you can now use this feature with SharePoint, Power Apps, and other tools.</p>
+<h2 id="whats-the-difference-between-fragments-and-merge-data">What’s the difference between Fragments and Merge Data?</h2>
+<p>Both Fragments and Merge Data will pass content into your document. However, each has a purpose which makes more sense when you are using a system like a CRM or a database. Within a CRM, you likely have a record like an account record which includes information like the name of your customer, address, account status, etc. Usually, this information is personalization information which is what you would pass into a document.</p>
+<p>Fragments is geared towards content that you want to pass into the document rather than just data elements. This allows you to separate your content fragments from your merge data. Your Fragments may be less updated than the Merge Data and could be used with all documents that are generated from a system.</p>
+<p>For example, maybe you want to place an address like this in your contract or letter:</p>
+<p>The data that is getting passed to your document from a CRM:</p>
+<p>Without using fragments, for every single template that you create you would have to insert tags like this to get the proper format:</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/02.png" alt="When you don’t use Fragments, you can place text tags into a document to insert values into a document."></p>
+<p>The issue is that it creates room for human error. You wouldn’t want to have to make sure you paste that correctly every single time. Fortunately, fragments can make that easy. In your Fragments data which you may pass to different templates, it would look like this:</p>
+<p>In your document, you would simply just need to insert {{USStreet}} and it will take the values from your Merge Data and merge them in the Fragment:</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/03.png" alt="Fragments allow you to simplify your tags in your templates."></p>
+<p>That’s a simple example, but there are a lot of repeatable content elements that are much easier to have shorthand when creating templates and allow you to centrally manage the content in apps like SharePoint, Power Apps, Dynamics, or databases rather than having to inject it into Merge Data.</p>
+<p>Some other ways Fragments can be used in multiple different scenarios with the data above:</p>
+<ul>
+<li>FullName: Concatenate the first name and last name when it doesn’t in the data.</li>
+<li>LastFirstName: Create different formatting variations from data, such as changing to a last name / first name format.</li>
+<li>PhoneNo: Take a number and use Fragments to format that number so you don’t have to remember how to write that in a template every time.</li>
+<li>SignerPhone: Use Fragments to create easy tags for long Acrobat Sign text tags, like including a field for a signer to write their phone number.</li>
+<li>Sig1: Create a shorthand tag for including a signature tag in a document.</li>
+<li>ConsultingServicesBlurb, TechnicalServicesBlurb, ExecutiveServicesBlurb: Fragments of a blurb about services that could be included in multiple different document templates.</li>
+</ul>
+<h2 id="how-can-i-use-fragments-with-microsoft-power-automate-and-microsoft-365-apps">How can I use fragments with Microsoft Power Automate and Microsoft 365 apps?</h2>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/04.png" alt=""></p>
+<p>Within the Adobe PDF Services connector in Microsoft Power Automate, Fragments is now available for you to utilize to pass Content Fragments to your documents in the Generate document from Word template action.</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/05.png" alt="The Fragments field in the Generate Document from Word template action allows you to pass Fragments to Document Generation API."></p>
+<p>In the image below, we can see that the values for each of the fragments are in a JSON object with the key and value set for each of the fragments. You can learn more about the structure of Fragments here.</p>
+<h3 id="converting-microsoft-lists-to-fragments">Converting Microsoft Lists to Fragments</h3>
+<p>In this example, each of the fragments is stored in a SharePoint list / Microsoft List so that they can easily be managed and maintained. The list is simple: one column for the Title, the second column for the content of the Fragment.</p>
+<p>If you are using a SharePoint list / Microsoft Lists to manage your Fragments, then you need to turn your list of items into an object in Microsoft Power Automate.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>First, you will need to create a variable:</p>
+<ol>
+<li>Create a new step and search for Initialize variable.</li>
+<li>Set your Name to fragments.</li>
+<li>Set your Type to Object.</li>
+<li>Set your Value to {}.</li>
+</ol>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/06.png" alt=""></p>
+<p>Next, you will want to get all of the items in your SharePoint List:</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/07.png" alt=""></p>
+<ol>
+<li>In your flow in Microsoft Power Automate, use the Get Items action for SharePoint to get the list of items in your list.</li>
+<li>Set the Site Address and List Name to the appropriate list in SharePoint.</li>
+</ol>
+<p>Next, you will need to then iterate through each of the items in the list to turn them into an object rather than an array.</p>
+<ol>
+<li>Add a new step.</li>
+<li>Search for Apply to each.</li>
+<li>In Select an output from previous steps, use the Dynamic content panel to insert value variable into the field.</li>
+</ol>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/08.png" alt=""></p>
+<p>Inside of the Apply to each loop, we want to add a property to our fragments variable.</p>
+<ol>
+<li>Add a new step inside of the Apply to each loop.</li>
+<li>Search for Compose and select.</li>
+<li>Click your cursor in the Inputs field.</li>
+<li>In the Dynamic content panel, click on the Expression tab.</li>
+<li>In the function, we need to use the addProperty() function to add a property.</li>
+</ol>
+<p>Here is a sample:</p>
+<p>In the code above:</p>
+<ul>
+<li>variables(‘fragments’) means it will add the property to the fragments object variable we created before.</li>
+<li>items(‘Apply_to_each’)?[‘Title’] means that it will set the property name to the Title field in my SharePoint list.</li>
+<li>items(‘Apply_to_each’)?[‘Value_x002d_NoRichText’]) means that it will set the value of the property to the Value NoRichText field in SharePoint.</li>
+</ul>
+<p>Once you have that set with your field names, then click Update to insert it into your Compose action.</p>
+<p>Then, you will need to update the variable.</p>
+<ol>
+<li>In the Apply to each action, add a new step.</li>
+<li>Search for Set variable and select.</li>
+<li>In the Name field, set it to fragments.</li>
+<li>In the Value field, use the Dynamic content panel to insert the Outputs variable from Compose.</li>
+</ol>
+<p>This should now create an object with the key-value pairs of the fragments.</p>
+<h3 id="creating-your-document-generation-action">Creating your Document Generation action</h3>
+<ol>
+<li>In Power Automate, click to add a new step.</li>
+<li>Search for Adobe PDF Services and select.</li>
+<li>Select Generate document from Word template.</li>
+<li>In the Template File Name, set it to whatever you desire as long as it ends with .docx.</li>
+<li>In the Merge Data, pass the data that you want to insert into the document.</li>
+<li>In Template File Content, pass the File Content of your Word template. You can use the Get File Content action for OneDrive, SharePoint, or any of the other file connectors to get that data.</li>
+<li>Click Show Advanced Options.</li>
+<li>In the Fragments field, insert your cursor into the field.</li>
+<li>Using the Dynamic content panel, click on Expressions.</li>
+<li>For this scenario, we can type string(variables(‘fragments’)) . This will convert the JSON object variable into a string.</li>
+</ol>
+<p>Once you are done, you can then save the document to SharePoint or a different file repository.</p>
+<p>One final step before passing the Fragments to the Generate document from Word template action is you need to convert the JSON object into a string.</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/09.png" alt="Adobe Document Generation API allows you to dynamically push data into documents and use content fragments."></p>
+<p>A full view of the sample flow is here:</p>
+<p><img src="/blog/use-fragments-with-adobe-document-generation-for-contract-elements-with-microsoft-power-automate/10.png" alt="Final flow in Microsoft Power Automate."></p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>Fragments provides a great way to manage content within your contracts, agreements, letters, or any other documents you generate with Adobe Document Generation API. Using the Adobe PDF Services connector in Microsoft Power Automate, it gives you the ability to use Fragments with any of the 600+ connectors in Microsoft Power Automate. You can get started and try today for free.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Generate Documents and Send in Bulk for E-Signature in Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="Mail merge has been around since the 80s. However, back in the 80s, most of the ways that people would think of mail merge was to print documents and envelopes "><meta property="og:title" content="Generate Documents and Send in Bulk for E-Signature in Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="Mail merge has been around since the 80s. However, back in the 80s, most of the ways that people would think of mail merge was to print documents and envelopes "><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate-807838092dcf"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Generate Documents and Send in Bulk for E-Signature in Microsoft Power Automate</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/01.png" alt=""><div class="article-body"><h2 id="learn-how-you-can-dynamically-generate-documents-in-bulk-from-excel-data-and-also-send-it-for-signature-in-microsoft-365-with-adobe-connectors">Learn how you can dynamically generate documents in bulk from Excel data and also send it for signature in Microsoft 365 with Adobe connectors.</h2>
+<p>Mail merge has been around since the 80s. However, back in the 80s, most of the ways that people would think of mail merge was to print documents and envelopes in bulk to be packed into envelopes and sent off. This could be for employee notices like bonus letters, offer letters, account statements, and other scenarios.</p>
+<p>While there is still plenty of mail sent in modern times, more need is to have documents delivered electronically. In this article, we’ll learn how you can use a list of recipients in a Microsoft Excel sheet and generate documents dynamically using Adobe Document Generation API, which is part of the Adobe PDF Services connector in Microsoft Power Automate. We will also see how you have those documents delivered in bulk using Adobe Acrobat Sign.</p>
+<h2 id="scenario">Scenario</h2>
+<p>In the example below, we want to generate bonus letters to send to employees. We have a list of employees in a spreadsheet that we want to iterate through and send the letters to their managers to sign and the employee to receive. Some of them will be getting a bonus of stock, some will not, so we will use conditional sections with Adobe Document Generation API to only include that in the documents when necessary.</p>
+<h2 id="what-you-are-going-to-need">What you are going to need</h2>
+<ul>
+<li>Adobe PDF Services API</li>
+<li>Microsoft Power Automate (Premium subscription)</li>
+<li>Adobe Document Generation add-in for Microsoft Word*</li>
+<li>Adobe Acrobat Sign for enterprise (for sending for e-signature). You can also get a developer account here.</li>
+</ul>
+<p>*Note: you do not need the Adobe Document Generation add-in to tag your documents, but it does make it very easy to tag.</p>
+<h2 id="create-excel-file">Create Excel file</h2>
+<p>First, we need to create an Excel file. In this example, we are going to create a file with the following columns:</p>
+<ul>
+<li>Employee First Name</li>
+<li>Employee Last Name</li>
+<li>Employee Email</li>
+<li>Employee Job Title</li>
+<li>Employee Company</li>
+<li>Employee Street</li>
+<li>Employee City</li>
+<li>Employee State</li>
+<li>Employee Zip</li>
+<li>Bonus</li>
+<li>Bonus Shares</li>
+<li>Manager First Name</li>
+<li>Manager Last Name</li>
+<li>Manager Title</li>
+<li>Manager Email</li>
+</ul>
+<p>Once you have created all of your fields, you need to turn your sheet into a table, allowing the table to be selectable in Microsoft Power Automate. You can create a table by doing the following:</p>
+<ol>
+<li>Select all of the columns and rows.</li>
+<li>In the Ribbon, switch to Insert section and select Table.</li>
+</ol>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/02.png" alt=""></p>
+<p>You can also name your table by selecting your table, click Table Design in the ribbon, and set the name title.</p>
+<p>Once you do that, you will want to save your Excel file to OneDrive or SharePoint, as this will allow you to reference the list in Microsoft Power Automate.</p>
+<h2 id="create-a-flow">Create a flow</h2>
+<p>As the next step, we are going to create our flow. There are several ways in Microsoft Power Automate that you can trigger flows to start. In this example, we are going to make one that is manually triggered.</p>
+<ol>
+<li>Log into Microsoft Power Automate.</li>
+<li>Click Create.</li>
+<li>Select Instant cloud flow.</li>
+<li>In the Choose how to trigger flow list, select Manually trigger a flow.</li>
+</ol>
+<p>You should now have a flow that looks like a blank slate like this:</p>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/03.png" alt=""></p>
+<h2 id="get-a-list-from-excel">Get a list from Excel</h2>
+<p>As the first step, we want to get our list of recipients in Microsoft Excel.</p>
+<ol>
+<li>Click on + New step.</li>
+<li>In the search bar, search for Excel.</li>
+<li>Select Excel Online (Business).</li>
+<li>As the action, choose List rows in a table.</li>
+</ol>
+<p>You will need to set where your file is located:</p>
+<ul>
+<li>Location: Which SharePoint or OneDrive location your document is stored in.</li>
+<li>Document Library: Which library your document is stored in. If it is OneDrive, then there will be only one option (OneDrive).</li>
+<li>File: If you click the File icon, you can navigate to the location your Excel file is stored.</li>
+<li>Table: If you created a table in your Excel file, it should be listed there. If you don’t see a table listed, then you need to go back and create a table.</li>
+</ul>
+<p>This next step is to make it easier to get at the JSON output from the Excel action.</p>
+<ol>
+<li>Click New step.</li>
+<li>Search for Initialize variable.</li>
+<li>Set the Name of the variable. (ex. excelData)</li>
+<li>Set Type to Array.</li>
+<li>For Value, use the Dynamic content panel to select value: List of Items.</li>
+</ol>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/04.png" alt=""></p>
+<p>As our next step, we want to run our flow to get data references to build our template in Microsoft Word.</p>
+<ol>
+<li>Click Save in the top-right corner.</li>
+<li>Click Test.</li>
+<li>Select Manually and click the Test button.</li>
+<li>Click Continue.</li>
+<li>Click Run Flow.</li>
+</ol>
+<p>Once it runs successfully, you can expand the Initialize variable action and see that it returns an array with each row in the Excel table.</p>
+<p>Copy one of the items in the output (not the whole array) to your clipboard, as we will use that as our sample data for generating our template in Microsoft Word. The data you copy will look something like this:</p>
+<h2 id="create-a-template-in-microsoft-word">Create a template in Microsoft Word</h2>
+<p>Now that we have some sample data, we can tag our template in Microsoft Word using Adobe Document Generation add-in. While you do not need the add-in to add fields to your document, it makes it much easier.</p>
+<ol>
+<li>Click Document Generation in the menu.</li>
+<li>Click Get Started.</li>
+<li>In the JSON Data field, paste the sample data.</li>
+<li>Click Generate Tags.</li>
+</ol>
+<p>Now, you can use Adobe Document Generation tagger to place fields on your document. Select the place where you to place your tag, select your tag and click Insert Text.</p>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/05.gif" alt=""></p>
+<p>We can then place all of the different tags into the appropriate spots in the letter.</p>
+<h2 id="conditional-section">Conditional section</h2>
+<p>In the second paragraph, we see text around a stock bonus that only applies to certain employees in the list. We can set a conditional section for this paragraph so that the paragraph only shows for certain employees.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>To do this:</p>
+<ol>
+<li>Select the paragraph in your document.</li>
+<li>Click on Advanced in Document Tagger.</li>
+<li>Expand the Conditional content section.</li>
+<li>In Select records, choose Bonus Shares.</li>
+<li>Under Select operator, choose !=.</li>
+<li>In Value, set it to 0.</li>
+</ol>
+<p>By setting this, we tell the template only to show this section if the Bonus Shares value is not equal to 0.</p>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/06.gif" alt=""></p>
+<h2 id="add-adobe-acrobat-sign-tags">Add Adobe Acrobat Sign tags</h2>
+<p>As the next step, we want to add a signature location for the manager and the employee. We can do this using the Document Tagger.</p>
+<ol>
+<li>Place the cursor where to place the signature for the manager’s signature.</li>
+<li>Click on Advanced in Document Tagger and expand Adobe Acrobat Sign.</li>
+<li>Set the number of signers to 2.</li>
+<li>Set the Signer to Signer-1.</li>
+<li>Set the Field Type to Signature.</li>
+<li>Click Insert Adobe Acrobat Sign Tag.</li>
+</ol>
+<p>For the second recipient for the employee, move the cursor to the lower signature location. Change the Signer to Signer-2 and click Insert Adobe Acrobat Sign Tag.</p>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/07.gif" alt=""></p>
+<p>Now that we have the document tagged, save the Word template into OneDrive or SharePoint to reference inside of Microsoft Power Automate.</p>
+<h2 id="get-file-contents-and-generate-documents">Get File Contents and Generate documents</h2>
+<p>Next, we will finish configuring the flow. In this section, we will get our document template and generate documents.</p>
+<ol>
+<li>Click on + New step.</li>
+<li>Search for OneDrive or SharePoint (depending on where you saved the template).</li>
+<li>Select the Get file content action.</li>
+<li>Choose where the file Word template is located.</li>
+</ol>
+<p>Next, we want to iterate through each of the rows in the flow.</p>
+<ol>
+<li>Click on + New step.</li>
+<li>Select Control.</li>
+<li>Select Apply to Each.</li>
+</ol>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/08.png" alt=""></p>
+<p>Inside of the Apply to each loop, use the Dynamic content panel value List of Items.</p>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/09.png" alt=""></p>
+<ol>
+<li>Click on Add an action in the Apply to each action.</li>
+<li>Search for Adobe PDF Services.</li>
+<li>Select Adobe PDF Services.</li>
+<li>Select Generate document from Word template action.</li>
+<li>In the Template File Name, set the name of the file. As long as the file name ends with .docx, then you can name it whatever you want.</li>
+<li>Using the Dynamic Content panel, set the variable Merge data field to body/value — Item.</li>
+<li>In File Content, use the Dynamic Content panel to set it to File content.</li>
+</ol>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/10.png" alt=""></p>
+<p>Next, we want to save a copy of the generated document into OneDrive or SharePoint. In the example below, we are saving the generated documents to OneDrive.</p>
+<ol>
+<li>Click on Add an action after the Generate document step.</li>
+<li>Select OneDrive or SharePoint.</li>
+<li>Select the Create file action.</li>
+<li>In the Folder Path field, set it to the folder you want to save the file.</li>
+<li>Set File Name to the name of the generated file. The Dynamic Content panel is a helpful way of doing this as it allows you to use the Excel fields to name the file. For example: [Employee Last Name]_[Employee First Name].pdf.</li>
+<li>In File Content, set it to Output File Content using the Dynamic Content panel.</li>
+</ol>
+<p><img src="/blog/generate-documents-and-send-in-bulk-for-signature-in-microsoft-power-automate/11.png" alt=""></p>
+<h2 id="adding-adobe-acrobat-sign">Adding Adobe Acrobat Sign</h2>
+<p>To deliver agreements for signature using Adobe Acrobat Sign, we can add Adobe Acrobat Sign actions to our loop.</p>
+<ol>
+<li>Click on Add an action after Create file action.</li>
+<li>Search for Adobe Acrobat Sign.</li>
+<li>Select the Upload a document and get a document ID.</li>
+<li>In the File Name, set the file name.</li>
+<li>In File Content, use the Dynamic content panel to select Output File Content.</li>
+</ol>
+<p>Next, we need to send the agreement using Adobe Acrobat Sign.</p>
+<ol>
+<li>Click on Add an action after Upload a document and get a document ID action.</li>
+<li>Search for Adobe Acrobat Sign.</li>
+<li>Select the Create an agreement from an uploaded document and send for signature.</li>
+</ol>
+<p>Next, we need to configure the agreement:</p>
+<ul>
+<li>Agreement Name: Name of your agreement that will get sent out. This shows up in the emails sent by Adobe Acrobat Sign.</li>
+<li>Document ID: Use the Dynamic content panel to select Document ID from the previous step.</li>
+<li>Participant Email 1: Set this to the Manager Email value using the Dynamic content panel.</li>
+<li>Participant Order Set this to 1.</li>
+<li>Participant Role set this to SIGNER.</li>
+</ul>
+<p>We then need to add our second signer. To do this, click on Add new item after the Participant Role. Fill out the information for the employee:</p>
+<ul>
+<li>Participant Email 1: Set the email to Employee Manager Email.</li>
+<li>Participant Order do not touch</li>
+<li>Participant Role set this to SIGNER.</li>
+</ul>
+<p>Once you have done this, you have completed the flow. You can now save and Test to run the flow to make sure it iterates correctly.</p>
+<h2 id="additional-ideas">Additional Ideas</h2>
+<p>Using Microsoft Power Automate with Adobe Document Generation API and Adobe Acrobat Sign is a really powerful way to automate many these actions in bulk. Here are a few other additional ideas you can consider when creating your flows.</p>
+<h2 id="use-protect-pdf">Use Protect PDF</h2>
+<p>If you don’t need to get a signature on documents you are generating, you still might want to protect them. Using Protect PDF action in Adobe PDF Services can ensure the data is secured or restrict editing or copying of data in documents and attach them in an email to share.</p>
+<h2 id="parallel-branches">Parallel Branches</h2>
+<p>You might want to also consider creating parallel branches in Microsoft Power Automate to make multiple or send multiple agreements at the same time. This is a benefit compared to mail merge on a desktop computer because multiple branches are running simultaneously.</p>
+<h2 id="update-adobe-acrobat-sign-status-back-into-the-excel-file">Update Adobe Acrobat Sign status back into the Excel file</h2>
+<p>Adobe Acrobat Sign has triggers that allow you to trigger a flow when actions occur like an agreement is signed, when viewed, etc. You can use these to update a column in Excel so that you can see the latest if documents have been delivered or signed.</p>
+<h2 id="deliver-documents-using-approvals">Deliver documents using Approvals</h2>
+<p>Microsoft Teams and Power Automate have approvals, which you can use to send a task for review and approval. This can be useful when generating a document to route it for approval or review to each recipient.</p>
+<h2 id="lookup-user-information-to-populate-using-office-365-users-connector">Lookup user information to populate using Office 365 Users connector</h2>
+<p>Suppose you want to look up profile information or the manager of a user in Microsoft 365. In that case, you can use Office 365 connector in Microsoft Power Automate to collect that info using their email address. This can be useful, so you don’t have to put that information in the Excel file explicitly but instead reference and have the flow lookup that information and spare the columns in Excel.</p>
+<h2 id="use-connectors-other-than-excel">Use connectors other than Excel</h2>
+<p>Excel is the first tool that all of us learned for storing structured data and is still the go-to app for many departments. However, one of the great things about Microsoft Power Automate is its integration with other data systems like SharePoint Lists, Microsoft Dataverse, Smartsheets, Office 365 users, and many other connectors. You don’t have to create spreadsheets.</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>The combination of Microsoft Power Automate, Adobe PDF Services, and Adobe Acrobat Sign creates a powerful combination for automating many different document workflows. It allows you to automate bulk actions and tie them into the apps and services people use every day.</p>
+<p>To get started, give Adobe PDF Services API a try and see what document processes you can start automating.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Use Adobe InDesign and Adobe Acrobat Sign to Streamline Your Forms — Ben Vanderberg</title><meta name="description" content="UPDATE (2/5/2020): Updated new imagery, branding, and added new references for getting started with Adobe Acrobat Sign and InDesign."><meta property="og:title" content="Use Adobe InDesign and Adobe Acrobat Sign to Streamline Your Forms — Ben Vanderberg"><meta property="og:description" content="UPDATE (2/5/2020): Updated new imagery, branding, and added new references for getting started with Adobe Acrobat Sign and InDesign."><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms-71c6a84c9d81"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Use Adobe InDesign and Adobe Acrobat Sign to Streamline Your Forms</h1><span class="meta">February 7, 2019</span><img class="hero-img" src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/01.png" alt=""><div class="article-body"><p>UPDATE (2/5/2020): Updated new imagery, branding, and added new references for getting started with Adobe Acrobat Sign and InDesign.</p>
+<p>It is amazing how forms exist everywhere. When I go to the doctor, when I sign up for an event, or when I go to the DMV, there are always forms to fill out and sign. When I went to college, Student Services had a dedicated wall for all of the possible forms you could need. It was a quarterly ritual to see students with handfuls of forms running up and down hallways getting signatures from professors, advisers, etc. Even today, we all have stories like that.</p>
+<p>Recently, I was helping a customer turn their static PDFs into interactive forms on their website using Adobe Acrobat Sign and Adobe Acrobat, both part of Adobe Document Cloud. That way, their users could go right to their website, fill out forms, and submit it automatically. No printers involved.</p>
+<p>All of their forms were designed by their creative team in Adobe InDesign. One of the challenges they ran into was when it came time to update these forms, it would take weeks for them to re-tag documents that came from the designers, which is expensive and very time-consuming.</p>
+<p>To make this easier, we thought, what if we built form fields directly into the design layouts that were being created in Adobe InDesign? That way, any design updates would already have all of the interactivity for Adobe Acrobat Sign already setup.</p>
+<p>Before we start, I have to note this isn’t the only way you can create your forms. You can use Adobe Acrobat, Microsoft Word, and all sorts of other tools simply by using text tags. This is helpful, though, when you have a lot of forms created by your designers in Adobe InDesign.</p>
+<p>Also before we start, if you are a video learner, have a look at the Adobe Acrobat Sign Getting Started — Part 1: Building Templates — L6721a from Adobe MAX 2020 where I walk through some of the different ways that you can tag for Adobe Acrobat Sign, including InDesign.</p>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/02.png" alt="Check out on Adobe MAX 2020 how you can learn more about how to use Adobe InDesign to tag documents for Adobe Acrobat Sign."></p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Adobe InDesign</li>
+<li>Adobe Acrobat Sign Business or Enterprise*</li>
+</ul>
+<p>*You can still use forms created in InDesign with any Adobe Acrobat Sign subscription, but Web Forms (i.e. embedding on a website) explained below requires Business or Enterprise licensing.</p>
+<h2 id="step-1-understanding-text-tags">Step 1: Understanding Text Tags</h2>
+<p>The first thing you need to learn for setting up Adobe Acrobat Sign interactivity in your Adobe InDesign files is to learn about Text Tags. Text Tags are specially formatted pieces of text that can be placed anywhere within the content of your document to specify the location, size, and type of fields recognized by Adobe Acrobat Sign. They can be used within file formats like Word, PDF, and other formats supported by Adobe Acrobat Sign. For PDF and InDesign documents, you can place these as part of your PDF Interactive form fields.</p>
+<p>In InDesign, you can create interactive PDF fields directly in your layout, whether you are creating a PDF form or wanting to use it with Adobe Acrobat Sign forms.</p>
+<p>When you read the Adobe Acrobat Sign Text Tags documentation, you’ll see examples like {{Sig_es_:signer1:signature}}. Here is how to interpret that:</p>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/03.png" alt="Breakdown of Adobe Acrobat Sign Text Tag"></p>
+<p>The examples with curly brackets are shown for when you are embedding fields in text documents, like Word documents. When you are using text tags with PDF form fields as we do in this exercise, you can ignore the curly brackets. The important thing you need is the text inside of the curly brackets for your field names.</p>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/04.png" alt="When using Text Tags with PDF fields, remove the double curly brackets for the form field names."></p>
+<h2 id="step-2-using-interactive-forms-in-adobe-indesign">Step 2: Using interactive forms in Adobe InDesign</h2>
+<p>As part of this guide, we are going to work with an InDesign form that you can download here.</p>
+<p>In this document, we have a variety of different fields that we will walk through, including:</p>
+<ul>
+<li>Name</li>
+<li>Phone</li>
+<li>Email</li>
+<li>Gender</li>
+<li>Signature</li>
+<li>Signing date</li>
+</ul>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/05.png" alt="Steps for adding a Form field to an InDesign layout."></p>
+<h3 id="customer-name-field">Customer name field</h3>
+<ol>
+<li>Go to Window &gt; Interactive &gt; Buttons and Forms to open the Buttons and Forms palette.</li>
+<li>Using the Rectangle tool, draw a Rectangle within the Customer Name field area.</li>
+<li>With the new rectangle selected, in the Buttons and Forms palette, set the following settings:</li>
+</ol>
+<ul>
+<li>Type: Text Field</li>
+<li>Name: CustomerName_es_:signer1:fullname</li>
+<li>Event: On Release or Tap</li>
+</ul>
+<p>The field is created. Now when you export the document as an Interactive PDF, this field will show up on the PDF and when you import it into Adobe Acrobat Sign.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Next, repeat the process for the Customer Name field with the other fields in the InDesign layout. Here are the recommended Buttons and Forms settings for each:</p>
+<h3 id="phone-field">Phone field</h3>
+<ul>
+<li>Type: Text Field</li>
+<li>Name: Phone_es_:signer1:phone</li>
+<li>Event: On Release or Tap</li>
+</ul>
+<h3 id="email-field">Email field</h3>
+<ul>
+<li>Type: Text Field</li>
+<li>Name: Email_es_:signer1:email</li>
+<li>Event: On Release or Tap</li>
+</ul>
+<h3 id="signature-field">Signature field</h3>
+<ul>
+<li>Type: Text Field</li>
+<li>Name: Sig_es_:signer1:signature</li>
+<li>Event: On Release or Tap</li>
+</ul>
+<h3 id="signature-date-field">Signature date field</h3>
+<ul>
+<li>Type: Text Field</li>
+<li>Name: Date_es_:signer1:date</li>
+<li>Event: On Release or Tap</li>
+</ul>
+<h3 id="gender-radio-button-field">Gender radio button field</h3>
+<p>The Gender radio button has a slightly different process from the other text fields because we are creating options to select from.</p>
+<ol>
+<li>Using the Ellipse tool and holding shift, create an ellipse for your radio button.</li>
+<li>Select the ellipse.</li>
+<li>Set the following settings in the Buttons and Forms palette:</li>
+</ol>
+<ul>
+<li>Type: Radio Button</li>
+<li>Name: Gender_es_:signer1</li>
+<li>Event: On Release or Tap</li>
+<li>Button Value: Male</li>
+</ul>
+<p>For any of the subsequent options, such as Female, Prefer Not to Say, etc., you may copy and paste the ellipse you created. Then, change the Button Value in Buttons and Forms to match the appropriate value.</p>
+<h2 id="step-3-export-your-form-to-pdf">Step 3: Export your form to PDF</h2>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/06.png" alt="Save dialog for Adobe InDesign with Adobe PDF (Interactive) selected."></p>
+<p>Now that you have created all of your fields in your document, you will need to export this file as an Interactive PDF.</p>
+<ol>
+<li>Go to File &gt; Export.</li>
+<li>Under Format, select Adobe PDF (Interactive).</li>
+<li>Click Save.</li>
+<li>In the next dialog, click Export.</li>
+</ol>
+<h2 id="step-4-upload-to-adobe-acrobat-sign-as-a-web-form">Step 4: Upload to Adobe Acrobat Sign as a Web Form</h2>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/07.png" alt=""></p>
+<p>Once your PDF is saved, you can now turn it into a web form.</p>
+<ol>
+<li>Log in to your Adobe Acrobat Sign Business or Enterprise account.Note: For more information about the different subscription levels, see here. Click links here if you need a Trial or Developer account.</li>
+<li>On your dashboard, select Create Web Form.</li>
+<li>Upload your PDF file where it asks and give the web form a name.</li>
+<li>Click Preview and Position Fields.</li>
+<li>Click Next.</li>
+</ol>
+<p>Here, you will see that your fields have been recognized by Adobe Acrobat Sign. You can adjust the fields if needed.</p>
+<p>If everything looks good, click Send.</p>
+<p>Now you have a URL or embed code you can place on your website and link to. Users can fill the form and not have to worry about finding a paper copy or downloading and printing a document.</p>
+<h2 id="bonus-use-creative-cloud-libraries-to-standardize-your-form-fields">BONUS: Use Creative Cloud libraries to standardize your form fields</h2>
+<p><img src="/blog/use-adobe-indesign-and-adobe-sign-to-streamline-your-forms/08.png" alt="You can add form fields to your CC Libraries for easy re-use."></p>
+<p>If you are designing a lot of forms with the same types of fields, or if you are working as a team and need to standardize forms and form fields, consider using Creative Cloud libraries. They allow you to create a library of your field elements that can be shared with your team. This saves you time adding fields to layouts and makes form fields consistent.</p>
+<ol>
+<li>Open Adobe InDesign.</li>
+<li>Open Window &gt; CC Libraries</li>
+<li>Click on the drop-down list and select Create New Library…</li>
+<li>Name your new library and click Create. E.g. Form Fields</li>
+<li>Select the field and related items (like label, etc.) in your layout.</li>
+<li>Click the + sign and select Graphic.</li>
+</ol>
+<p>Your form field is now added to your CC Libraries. Now, if you are creating a new form in InDesign, you don’t have to worry about rebuilding form fields repeatedly; simply drag and drop from CC Libraries. This is also a benefit if you are using reports or merging data in Adobe Acrobat Sign. This also means that across all documents, fields will have the same names.</p>
+<h2 id="resources">Resources</h2>
+<h2 id="adobe-sign-text-tag-guide">Adobe Sign Text Tag Guide</h2>
+<h3 id="when-using-text-tags-in-an-editable-document-adobe-sign-overlays-a-rectangle-covering-the-entire-span-of-the-text-tag">When using text tags in an editable document, Adobe Sign overlays a rectangle covering the entire span of the text tag…</h3>
+<p>helpx.adobe.com</p>
+<h2 id="create-a-web-form">Create a web form</h2>
+<h3 id="a-signable-web-form-can-be-created-to-embed-on-your-website-or-send-as-a-web-link-allowing-multiple-people-to-easily">A signable web form can be created to embed on your website (or send as a web link), allowing multiple people to easily…</h3>
+<p>helpx.adobe.com</p>
+<h2 id="work-with-forms-in-indesign">Work with forms in InDesign</h2>
+<h3 id="using-indesign-you-can-create-simple-forms-within-indesign-without-needing-to-touch-up-the-pdf-document-in-acrobat">Using InDesign you can create simple forms within InDesign, without needing to touch up the PDF document in Acrobat…</h3>
+<p>helpx.adobe.com</p>
+<h2 id="create-forms-using-acrobat-dc">Create forms using Acrobat DC</h2>
+<h3 id="adobe-sign-text-tags-can-be-used-in-conjunction-with-acrobat-form-fields-to-define-the-specific-properties-of-a-field">Adobe Sign text tags can be used in conjunction with Acrobat form fields to define the specific properties of a field…</h3>
+<p>helpx.adobe.com</p>
+<h2 id="use-creative-cloud-libraries-in-indesign-to-share-and-organize-design-assets">Use Creative Cloud Libraries in InDesign to share and organize design assets</h2>
+<h3 id="adobe-creative-cloud-libraries-allow-you-and-your-colleagues-to-collect-and-organize-all-of-your-design-assets-from">Adobe Creative Cloud Libraries allow you and your colleagues to collect and organize all of your design assets from…</h3>
+<p>helpx.adobe.com</p>
+<h2 id="adobe-sign-getting-started---part-1-building-templates">Adobe Sign Getting Started - Part 1: Building Templates</h2>
+<h3 id="join-this-lab-to-learn-about-adobe-signs-built-in-functionalities-to-create-intelligent-forms-and-discover-best">Join this lab to learn about Adobe Sign’s built-in functionalities to create intelligent forms and discover best…</h3>
+<p><a href="http://www.adobe.com">www.adobe.com</a></p>
+<p>Follow the Adobe Tech Blog for more developer stories and resources, and check out Adobe Developers on Twitter for the latest news and developer products.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

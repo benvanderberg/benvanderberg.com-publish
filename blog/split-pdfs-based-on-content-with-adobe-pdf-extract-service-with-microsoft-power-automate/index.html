@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Split PDFs Based on Content with Adobe PDF Extract Service with Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="Even in the digital age, paperwork is an uphill task. Even if you migrated your business processes to PDF-based rather than paper, there’s still often manual wo"><meta property="og:title" content="Split PDFs Based on Content with Adobe PDF Extract Service with Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="Even in the digital age, paperwork is an uphill task. Even if you migrated your business processes to PDF-based rather than paper, there’s still often manual wo"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate-a08dc5fbafaa"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Split PDFs Based on Content with Adobe PDF Extract Service with Microsoft Power Automate</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/01.png" alt=""><div class="article-body"><h2 id="use-adobe-pdf-extract-service-in-microsoft-power-automate-to-split-documents-based-on-document-content">Use Adobe PDF Extract service in Microsoft Power Automate to split documents based on document content.</h2>
+<p>Even in the digital age, paperwork is an uphill task. Even if you migrated your business processes to PDF-based rather than paper, there’s still often manual work to process documents, split PDFs into multiple PDFs, and do other actions.</p>
+<p>In a recent customer use case, a customer had many invoices they receive from one of their vendors as one large combined PDF. For the customer’s process, they need these separated again, into separate PDFs for internal routing and processing. The only issue is that the number of pages per invoice can vary. Because they don’t create the PDF, they have no control over whether those documents have a logical point like a bookmark to programmatically separate.</p>
+<p>Fortunately, one great tool to help with this is Adobe PDF Extract API, which takes our PDF documents and turns them into JSON data to create workflows based on content in the PDF using AI. Adobe PDF Extract service is now available as actions in Adobe PDF Services connector in Microsoft Power Automate to make that even easier.</p>
+<h2 id="what-you-are-going-to-need">What you are going to need</h2>
+<ul>
+<li>Microsoft Power AutomateYou will need access to premium connectors.</li>
+<li>Adobe PDF ServicesIf you don’t already have a subscription to Adobe PDF Services, you can get a free trial or learn more about subscribing here.</li>
+</ul>
+<h2 id="scenario">Scenario</h2>
+<p>In this scenario, we have a workflow that is manually triggered. In the trigger, we will upload a PDF document containing multiple invoices. Some of them are many pages, some of them are shorter. In our flow, we want it to split the PDFs based on the detection of a new page with the invoice header.</p>
+<p>For those who want to skip ahead, a copy of the flow described here can be downloaded on GitHub. You can learn how to import a flow here.</p>
+<h2 id="starting-trigger">Starting trigger</h2>
+<p>In this example, we’re using a Manually trigger a flow action to start the flow. There are many different ways you could trigger this for your workflow, though a couple of other common ways you could trigger your flow is when you receive an email to an inbox, when a file is uploaded into a specific folder, or all sorts of other triggers.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/02.png" alt="Using Manually trigger a flow trigger in Microsoft Power Automate with a File Content upload prompt."></p>
+<h2 id="getting-pdf-content">Getting PDF content</h2>
+<p>From the file that is uploaded from the trigger, we want to then pass that file to Adobe PDF Services to extract the content.</p>
+<ol>
+<li>Add a New action to your flow.</li>
+<li>Search for and select Adobe PDF Services.</li>
+<li>Select Extract PDF Structure in a JSON Object.</li>
+</ol>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/03.png" alt="PDF Extract action in Microsoft Power Automate allows you to extract content from your PDF documents."></p>
+<p>Now that you have that selected, you want to set the following in your action:</p>
+<ul>
+<li>File Name: You can set this to file.pdf. It doesn’t matter as long as it ends with .pdf.</li>
+<li>File Content: Use the Dynamic Content panel to get the content from the trigger or previous action to get the content.</li>
+<li>Add Character Information: Gets the Character Information for the styling of characters. In this scenario, this is not necessary.</li>
+<li>Get Styling Information: Gets the styling information of content.</li>
+</ul>
+<p>After adding our PDF Extract action, we need to parse the PDF content. Fortunately, this can be done using the Parse JSON action built into Microsoft Power Automate.</p>
+<ol>
+<li>Add a new action to your flow.</li>
+<li>Search for Parse JSON and select it.</li>
+<li>Set it to the Extracted PDF Structure value from the Adobe PDF Extract action for your Content field.</li>
+<li>For your schema, you can generate one, but to make it easier, you can copy the schema from GitHub here and paste it into the Schema field.</li>
+</ol>
+<h2 id="power-automate-flowsextract-schemajson-at-main--benvanderbergpower-automate-flows">power-automate-flows/extract-schema.json at main · benvanderberg/power-automate-flows</h2>
+<h3 id="this-file-contains-bidirectional-unicode-text-that-may-be-interpreted-or-compiled-differently-than-what-appears-below">This file contains bidirectional Unicode text that may be interpreted or compiled differently than what appears below…</h3>
+<p>github.com</p>
+<p>Once you have done that, you will now be able to select items from the PDF content from your Dynamic Content panel.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/04.png" alt="Parse JSON action allows you to take the content from PDF Extract action and make those fields easily accessible later in the flow."></p>
+<h2 id="using-search-array-to-find-content-in-pdf">Using Search Array to find content in PDF</h2>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/05.png" alt="Array Filter action in Microsoft Power Automate allows you to filter content based on parameters."></p>
+<p>Now that we have the PDF content in JSON format, you can filter for content inside the PDF. In the JSON structure, there is an array called elements containing the different elements of information in the PDF. Each element looks something like this:</p>
+<p>In this, you will notice that there is a lot of information available to find and identify content. For this example, because all of the invoices were made from the same document generator, all of the titles at the beginning have the same styling, in the same order in the document, so all of the titles have a path of //Document/H1 so we can assume that Path starts with //Document/H1. Each subsequent instance will have brackets such as //Document/H1[2] .</p>
+<p>There are lots of ways that you can leverage this content. Here are a couple of ways:</p>
+<h3 id="path">Path</h3>
+<p>When the document is parsed using Adobe PDF Extract API, it is processed by Adobe Sensei AI/ML services to understand the context of which parts of the PDF are paragraphs, headers, lists, tables, etc. Each of these are then provided a path inside the document. This can be really useful because if you are extracting data from documents that are very similar, the path will be the same or similar and that can be used to find or identify information.</p>
+<h3 id="text">Text</h3>
+<p>Text is where the text content is contained. This can be helpful if you are wanting to find elements that contain a certain value, such as a word, a set of words, etc.</p>
+<p>One important note is that Power Automate doesn’t natively support Regular Expressions (Regex) but there are some ways that people have figured out how to use Regex within Power Automate with Excel. There are also a number of options that you can use to compare strings.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/06.png" alt="Filtering an array in Microsoft Power Automate allows you to find content elements from the PDF content based on certain criteria."></p>
+<h3 id="font-and-styling">Font and styling</h3>
+<p>Many different PDF parsing tools don’t include styling information. For sighted people, font, size, and styling information can be a helpful clue as to the context of that document. For example, a set of text size 22, in Century Gothic Font, with a font-weight of 700 (aka Bold) might indicate that something is the title on the page. Something italicized can be an indicator that it is an important word.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Font and styling can be beneficial to finding content in PDF documents. Fortunately, PDF Extract API provides this information for each element so that you can use this to help search for content.</p>
+<h2 id="creating-variables-for-loop">Creating Variables for Loop</h2>
+<p>There are a few ways to do this, but using variables in Microsoft Power Automate can be useful to track info as we are processing content. For this scenario, there are a few we have created:</p>
+<ul>
+<li>values (string) — Used to collect the string to pass into the Split PDF action. These are in array format, but this will include the page ranges.</li>
+<li>numPages (integer) — Convenience variable for referencing body(‘Parse_JSON’)?[‘extended_metadata’]?[‘page_count’]</li>
+<li>numSplitPoints (integer) — Calculates the length of the searchArray-1 because this number is used during the loop along with the iterator to change behavior once it gets to the last item. This is calculated by using an expression sub(length(body(’searchArray’)),1).</li>
+<li>startPoint (integer) — Is used to store the starting page for a page range.</li>
+<li>endPoint (integer) — Is used to the end page for a page range.</li>
+<li>iterator (integer) — Used as an iterator for loops.</li>
+</ul>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/07.png" alt="Variables in the flow help manage different data as part of the flow."></p>
+<h2 id="loop-to-find-page-ranges">Loop to find page ranges</h2>
+<p>At this point in the flow, we have our variables setup and we have a filter array to collect all of the elements that are H1 headers (searchArray). We next need to loop through each of the elements in the searchArray to get the page ranges for each invoice so it will later be passed to Adobe PDF Services to split the PDF into separate PDFs.</p>
+<p>There is an important design we need to consider for in the workflow design. When PDF Services extracts the content elements, the pages numbers it provides are counted started from zero (0, 1, 2, 3, 4) like a lot of programming languages. For the Split PDF action, on the other hand, page ranges start from page one (1, 2, 3, 4). For this loop, we will need to translate between the page numbering difference and build a string with a set of page ranges to pass to the Split PDF action.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/08.png" alt="PDF Extract provides all of the content in PDF as elements in an array. When you filter that array, you can create a loop to cycle through the elements to determine the page ranges."></p>
+<p>When creating the loop, use the Dynamic content panel to pass in the Body variable from the searchArray action we previously created.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/09.png" alt="Body variable from Array Filter will provide an array of all the elements that were filtered based on criteria."></p>
+<p>Within the loop, the way we treat the last element in the array is different than the rest of the items. We want to use a Condition action to separate how we treat all elements except the last one. We can do this by making the following comparison in the condition:</p>
+<p>iterator is less than numSplitPoints</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/10.png" alt=""></p>
+<p>Remember, numSplitPoints calculates the total size amount of items in the searchArray. As part of this process, we will increment the iterator, so once the iterator is not less than the numSplitPoints, we will know it is the last element.</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/11.png" alt="Overview of the loop to extract the page ranges to split the PDF."></p>
+<p>Next, let’s set up the If yes section of the condition, which will be for every element except for the last item. In this, we will need to do the following:</p>
+<ul>
+<li>Set the startPoint variable</li>
+<li>Set the endPoint variable</li>
+<li>Increment the iterator</li>
+<li>Append the array to the values variable</li>
+</ul>
+<h3 id="expression-for-startpoint">Expression for startPoint</h3>
+<p>For the startPoint, we need to first create a Set variable action. For the Name, set it to startPoint. For the value, we will need to build an expression with the following value:</p>
+<p>add(body(‘searchArray’)?[variables(‘iterator’)]?[‘page’],1)</p>
+<p><img src="/blog/split-pdfs-based-on-content-with-adobe-pdf-extract-service-with-microsoft-power-automate/12.png" alt=""></p>
+<p>Once you have added the expression, you have entered the expression. You can click OK (in the screenshot above, it says Update, but it will say OK if you are doing this for the first time).</p>
+<p>Here is what this expression is doing:</p>
+<ul>
+<li>add()means addition, so add(1,2) will return 3.</li>
+<li>body(‘searchArray’)?[variables(‘iterator’)]?[‘page’] is getting the page value from the item in the array that is of the value iterator.</li>
+</ul>
+<p>This means that the startPoint variable is being set to the page number in the current element + 1 to align with the numbering for the Split PDF action.</p>
+<h3 id="expression-for-endpoint">Expression for endPoint</h3>
+<p>For the endPoint, we will still need to create Set variable action and use an expression. However, this is a more straightforward expression:</p>
+<p>body(‘searchArray’)?[add(variables(‘iterator’),1)]?[‘page’]</p>
+<p>In this case, this is just simply setting the variable to the page value of the current item in the loop using the iterator value.</p>
+<h3 id="increment-the-iterator">Increment the iterator</h3>
+<p>Next, you need to increment the iterator. You can do this using the Increment variable action. Set the name to iterator, and set the value to 1.</p>
+<h3 id="compensating-for-single-pages">Compensating for single pages</h3>
+<p>The page range is passed to Split PDF by using an array-like format. If you wanted to capture the page ranges 1–2, 3, and 4–5, then it would be written:</p>
+<p>1-2,3,4-5</p>
+<p>However, Split PDF does not accept a range like 3–3. You need to write it as a single number, so we need to have a condition to compensate for how this is written to the output variable.</p>
+<p>To fix the single page issue, a simple condition checks if the startPoint and endPoint variables are not equal. If this is true, we can use an Append to string action to append the range startPoint-endPointto the values string variable. If not, then it will just write the page startPoint,.</p>
+<p>To compensate for this, there is a simple condition that checks if the startPoint and endPoint variables are not equal. If this is true, then we can use a Append to string action to append the the range startPoint-endPoint, to the values string variable. If not, then it will just write the page startPoint,.</p>
+<p>We have now completed everything within the If yes category for if it is not the last element. Now we need to add the logic for the last element.</p>
+<h3 id="if-the-last-element">If the last element</h3>
+<p>Once we get to the last element, we need to write a slightly different addition to the list of elements. The logic will be similar to the “If Yes” section of the flow but with slight variations.</p>
+<p>First, we want to set the startPoint variable with the same value as we did for the startPoint value in the If yes section with a Set Variable action. You can copy this action.</p>
+<p>Next, we want to use a Set Variable action to set the endPoint to the page_count. This way, it will just collect the rest of the PDF in the last PDF.</p>
+<p>In the final step of this, we are doing similar to what we did with the condition at the end of If yes to append the ranges, but what is different here is that it doesn’t include a comma at the end because there won’t be an item after that.</p>
+<p>We have now collected all the information we need about the document. We have the page ranges we want to split into many PDFs, now we just need to actually split the PDF.</p>
+<h2 id="split-pdf">Split PDF</h2>
+<p>After the loop is processed, we can add an action called Split PDF as part of Adobe PDF Services. Within this, we will have a few values we need to populate:</p>
+<ul>
+<li>File Name — You can set this to anything as long as it ends with .pdf. Ex. file.pdf.</li>
+<li>Split Type — Set this to Array of Page Range.</li>
+<li>Split Configuration — Use the Dynamic content panel to insert values variable.</li>
+<li>File Content — Set this to the File content variable from the trigger.</li>
+</ul>
+<h2 id="saving-files-to-storage">Saving files to storage</h2>
+<p>Now that we have an action for splitting, we likely want to save these files to a location. In this case, we can use a loop (Apply to each action) to save each file and store it in SharePoint. For the input to the loop, we can use Dynamic content panel to set it to Split Document from the Split PDF action.</p>
+<p>Within the loop, we can then Add an action called Create File from SharePoint. This we can then set to the following values:</p>
+<ul>
+<li>Site address — Address to the SharePoint site you want to save to.</li>
+<li>Folder Path — Path where you want your documents saved.</li>
+<li>File Name — The name of the file. You can use anything, but in the example, we use the header name from the PDF content by using the expression body(‘searchArray’)?[variables(‘iterator’)]?[‘Text’] .</li>
+<li>File content — Set this to Split Document File Content variable using Dynamic content.</li>
+</ul>
+<h2 id="give-the-flow-a-try">Give the flow a try</h2>
+<p>We now have completed the flow, so click on Test in the top-right corner to run the flow, upload the file and see if your flow works. If you have any issues, you can look at the sample flow to know where you may have had errors. There is also an example document included.</p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>Adobe PDF Services provides a great way to automate document actions using content stored in the PDFs. The addition of PDF Extract service to Power Automate makes it easy to automate these based on content without writing and building AI models.</p>
+<p>If you would like to start using Adobe PDF Services with Microsoft Power Automate, get started with Adobe PDF Services.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

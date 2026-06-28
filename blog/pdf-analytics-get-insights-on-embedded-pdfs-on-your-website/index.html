@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>PDF Analytics: Get Insights on Embedded PDFs on Your Website — Ben Vanderberg</title><meta name="description" content="Making sure that the document looks exactly as you originally intended has always been the vision of PDF from its founding. It’s for this reason PDF often holds"><meta property="og:title" content="PDF Analytics: Get Insights on Embedded PDFs on Your Website — Ben Vanderberg"><meta property="og:description" content="Making sure that the document looks exactly as you originally intended has always been the vision of PDF from its founding. It’s for this reason PDF often holds"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website-44e6a314fb1f"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>PDF Analytics: Get Insights on Embedded PDFs on Your Website</h1><span class="meta">April 17, 2020</span><img class="hero-img" src="/blog/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website/01.png" alt=""><div class="article-body"><h2 id="one-of-the-primary-reasons-that-pdfs-have-become-so-ubiquitous-is-that-it-is-so-easy-to-take-anything-from-any-app-and-turn-it-into-a-pdf-and-know-that-it-will-look-exactly-as-you-intended-for-web-developers-though-they-need-tools-to-make-it-easier-to-use-on-the-web">One of the primary reasons that PDFs have become so ubiquitous is that it is so easy to take anything from any app and turn it into a PDF and know that it will look exactly as you intended. For web developers, though, they need tools to make it easier to use on the web.</h2>
+<p>Making sure that the document looks exactly as you originally intended has always been the vision of PDF from its founding. It’s for this reason PDF often holds legal weight for customers around the world and is as ubiquitous as paper is in the physical world.</p>
+<p>For web developers, though, PDFs can sometimes be a struggle. While the PDF does display documents exactly as the author intended, web developers expect control, ease when incorporating into their designs, and expect to have the same analytics that they have grown accustomed to with web content.</p>
+<p>So, what if you could:</p>
+<ul>
+<li>Get more data to understand how your visitors were viewing and interacting with your PDFs?</li>
+<li>Make PDF a first-class citizen in viewing experiences on the web?</li>
+</ul>
+<p>In my previous post, I walked through how you can easily embed a PDF into any website using Adobe PDF Embed API (PDF Embed). In this post, I will walk-through how you can connect this viewer to Adobe Analytics, and how you can connect event listeners to whatever you want!</p>
+<h2 id="what-you-will-need">What You Will Need</h2>
+<ul>
+<li>Adobe PDF Embed APIThis is entirely free. You can learn in just a few minutes how to get a Client ID and get started.</li>
+<li>Adobe Analytics optionalYou do not need Adobe Analytics for this, however if you are an Adobe Analytics customer, this is a great way to collect your analytics data on PDFs.</li>
+<li>JavaScript</li>
+</ul>
+<h2 id="events-tracked">Events Tracked</h2>
+<p>PDF Embed has a variety of different events that can be tracked within the embedded viewer. These can be used to:</p>
+<ul>
+<li>Track and understand visitor’s interest and behaviors while reading PDFs</li>
+<li>Extend the viewing experience by adding additional functionality such as chatbots or calls to action based on things like how long they spent on the page, how many pages they viewed, etc.</li>
+</ul>
+<p>There are a variety of events available including:</p>
+<p><img src="/blog/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website/02.png" alt="Source: Adobe PDF Embed API documentation"></p>
+<p>Check out examples on GitHub.</p>
+<h2 id="connecting-to-adobe-analytics">Connecting to Adobe Analytics</h2>
+<p><img src="/blog/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website/03.png" alt="Adobe PDF Embed API when embedded into websites can be connected to Adobe Analytics to get insights on reading habits of PDFs."></p>
+<p>Are you a subscriber of Adobe Analytics? PDF Embed can push data easily into your Report Suite. All you will need is your reportSuiteId and you can create a dashboard to learn about your viewers. You can see instructions here on how to get more insights. You can also use the live demo to generate your embed viewer.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Once you have your reportSuiteId set, you will need to configure your Report Suite in Adobe Analytics to add your context variables to make sure they are associated with the appropriate event tags. When you read the instructions, you can set your context variables to each of the events listed:</p>
+<ul>
+<li>a.dc.zoomLevel</li>
+<li>a.dc.loadPDF</li>
+<li>a.dc.viewPage</li>
+<li>a.dc.download</li>
+<li>a.dc.search</li>
+<li>a.dc.bookmarkClicked</li>
+<li>a.dc.copyText</li>
+<li>a.dc.print</li>
+</ul>
+<p><img src="/blog/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website/04.png" alt=""></p>
+<h2 id="using-event-listeners">Using event listeners</h2>
+<p>Not an Adobe Analytics customer? Not a problem! You can still take advantage of PDF analytics by capturing all of the events from PDF Embed in JavaScript.</p>
+<p>Let’s start with embedding a viewer into a webpage:</p>
+<p>If you’re unsure how to create your Client ID, check out my post on how to quickly setup your viewer for the first time. It takes only a couple minutes. The Client ID is used to authenticate a domain. So if you use the code above locally in an HTML file, it will render, but if you host it on a web server, your Client ID must match the domain related to your Client ID or it will not render your PDF.</p>
+<p>Below is a snippet of how, within your addEventListener function, you can add code to collect events that come from PDF Embed:</p>
+<p>See the full snippet below to see all of the different events you can use as callbacks:</p>
+<p>What you will see in the code is a switch that will list out each of the different events that are provided by PDF Embed. You can then use this code to push data into your own applications or analytics software, or trigger other events to occur on a page, such as prompt a paywall after you reach the second page, trigger to collect data from a person to create a lead, etc.</p>
+<p>Once you add this code to your website, you will be able to use your Inspector to see the different outputs. You can then use these to push the data into whatever application you like!</p>
+<p><img src="/blog/pdf-analytics-get-insights-on-embedded-pdfs-on-your-website/05.png" alt="From the snippet, this will export your events out to the Console so that you can understand what data you can collect from PDF Embed."></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>PDF Embed provides greater control back to the web developer to easily manage the viewing experience and understand their visitors better. It provides developers more flexibility to extend PDF viewing experiences using their own web-native tools. Using integration with Adobe Analytics, it allows you to better understand how your content is being read and viewed so that it can inform your content creation.</p>
+<h2 id="resources">Resources</h2>
+<ul>
+<li>Adobe PDF Embed API</li>
+<li>Adobe PDF Embed Code with Event Listeners</li>
+<li>Adobe PDF Embed API Event Listeners</li>
+</ul>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

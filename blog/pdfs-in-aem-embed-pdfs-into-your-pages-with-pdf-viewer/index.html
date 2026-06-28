@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>PDFs in AEM: Embed PDFs into Your Pages with PDF Viewer — Ben Vanderberg</title><meta name="description" content="Content can come in a variety of formats in AEM. They could be images, videos, or even PDF documents. When it comes to PDFs, what is often the case is these PDF"><meta property="og:title" content="PDFs in AEM: Embed PDFs into Your Pages with PDF Viewer — Ben Vanderberg"><meta property="og:description" content="Content can come in a variety of formats in AEM. They could be images, videos, or even PDF documents. When it comes to PDFs, what is often the case is these PDF"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer-7115c60b3c34"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>PDFs in AEM: Embed PDFs into Your Pages with PDF Viewer</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/01.png" alt=""><div class="article-body"><p>Content can come in a variety of formats in AEM. They could be images, videos, or even PDF documents. When it comes to PDFs, what is often the case is these PDFs are linked to and then rendered in the browser or downloaded to your computer, taking you away from the context and navigation of your own website. You also don’t get any insights into how they were interacting with PDFs other than downloading.</p>
+<p>There are a lot of common scenarios where this is the case. For example, you might see white-papers, guides, contracts, documents. If you are using AEM to power a customer portal or an intranet, you could have documents specifically related to a certain person that you want to host online.</p>
+<p>As part of AEM Core Components, there is now a new component called PDF Viewer, powered by Adobe PDF Embed API as part of Adobe Document Services. In a previous blog, I wrote in detail how you can take advantage of PDF Embed API. This makes it easy to incorporate it into your AEM pages.</p>
+<p>PDF Viewer allows you to embed PDF views into a web page using simple drag and drop. The core component supports all of the embed modes supported as part of PDF Embed API including Full Window, Inline, and Sized Container for use with all sorts of PDF content. As a core component, this means that this can also be extended and customized by AEM developers to meet your specific needs.</p>
+<p>In this article, let’s learn more about how we can use PDF Viewer to embed viewing experiences into our webpages.</p>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>AEM 6.5</li>
+<li>AEM Core Components 2.10+</li>
+<li>PDF Embed API Client ID</li>
+</ul>
+<p>For this article, we are going to assume you are running AEM on a local instance (hence using localhost) but this will work with any installed AEM instance.</p>
+<h2 id="install-packages">Install Packages</h2>
+<ol>
+<li>Download the latest core components from here.</li>
+<li>In AEM, navigate to Settings &gt; Deployment Packages.</li>
+<li>Upload the Core Components package.</li>
+</ol>
+<h2 id="how-to-configure-a-context-aware-configuration">How to Configure a Context Aware Configuration</h2>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/02.png" alt=""></p>
+<p>Once you have installed the packages, you will need to configure your Context Aware Configuration. The Context Aware Configuration allows you to set which PDF Embed API Client ID, Analytics Report Suite will be set for a specific site.</p>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>Create a new Context Aware Configuration.</p>
+<ol>
+<li>In AEM, go to CRX.</li>
+<li>Navigate to /conf/<my-site></li>
+<li>Create a new node called sling:configs.</li>
+<li>As a sub-node of sling:configs, create a new node called com.adobe.cq.wcm.core.components.internal.services.pdfviewer.PdfViewerCaConfig</li>
+<li>You will need to set the following parameters:clientId - Required - <a href="https://www.adobe.com/go/dcsdks_credentialsreportSuiteId">https://www.adobe.com/go/dcsdks_credentialsreportSuiteId</a> - Adobe Analytics ID</li>
+</ol>
+<p>Using Adobe Analytics will require you to have a matching reportSuiteId as the one you have configured in AEM Sites header or in Adobe Launch. For more information on how to configure Adobe Analytics with PDF Embed API, see the documentation.</p>
+<h2 id="add-core-component-to-your-app">Add Core Component to Your App</h2>
+<p>Next, we will want to extend our core component and add it to your own app.</p>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/03.png" alt=""></p>
+<ol>
+<li>In AEM, go to CRX.</li>
+<li>Navigate to /apps/core/wcm/components/pdfviewer.</li>
+<li>Copy this folder.</li>
+<li>Add it to your own app. Ex. /apps/weretail/components.</li>
+<li>Navigate into the pdfviewer component.Ex. /apps/weretail/components/pdfviewer/v1/pdfviewer</li>
+<li>Add or edit your componentGroup property to place it in your desired Component Group. Ex. We.Retail Form</li>
+<li>Add or edit your sling:resourceSuperType field to map to the core component. Ex. /apps/core/wcm/components/pdfviewer/v1/pdfviewer</li>
+</ol>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/04.png" alt=""></p>
+<h2 id="add-pdf-viewer-to-your-template">Add PDF Viewer to Your Template</h2>
+<p>You will need to add the PDF Viewer component into your template, which you can do through your Template Polices.</p>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/05.png" alt=""></p>
+<h2 id="add-and-configure-the-pdf-viewer-component">Add and Configure the PDF Viewer Component</h2>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/06.png" alt=""></p>
+<ol>
+<li>Drag and drop the PDF Viewer component into your page.</li>
+<li>Click to Configure the component.</li>
+</ol>
+<h3 id="configuration">Configuration</h3>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/07.png" alt=""></p>
+<p>Document Path allows you to set your document path as an absolute URL or AEM Assets path.</p>
+<h3 id="customize">Customize</h3>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/08.png" alt=""></p>
+<p>PDF Viewer can be configured to have a variety of different viewing modes:</p>
+<ul>
+<li>TypeWhether you want to show as Full Window, Inline, or Sized Container.</li>
+<li>Default View ModeWhether to fit to page or fit to width.</li>
+<li>Full Screen</li>
+<li>Annotation ToolsWhether the annotation tools will be available for customers to add annotations and comments to the PDF.</li>
+<li>Left Hand PanelWhether the left hand panel which shows page previews and bookmarks is shown.</li>
+<li>Download PDFWhether the viewer has the ability to download a PDF copy of the document.</li>
+<li>Print PDFWhether the viewer has the ability to print a copy of the document.</li>
+<li>Page ControlsToggle to display page controls.</li>
+<li>DockToggle view of the dock at the bottom of the viewer.</li>
+</ul>
+<h3 id="previewing-your-configuration">Previewing Your Configuration</h3>
+<p>To preview, you can click on Preview in the top-right corner of your navigation bar. You may have to refresh your page in order to see the Viewer take effect.</p>
+<p><img src="/blog/pdfs-in-aem-embed-pdfs-into-your-pages-with-pdf-viewer/09.png" alt=""></p>
+<h2 id="summary">Summary</h2>
+<p>PDF Viewer in AEM allows you to get greater insights into the PDFs hosted on your webpage by being able to get granular metrics, such as how long people spend on each page. It also allows you to mix your PDF views with the rest of your HTML content seamlessly.</p>
+<p>If you would like to learn more about how you can extend this even more, have a look at the documentation to see how you can use things like JavaScript events to extend the viewing experience.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

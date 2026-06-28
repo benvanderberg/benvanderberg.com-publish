@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Adobe PDF Tools API: Unpacking the October Release — Ben Vanderberg</title><meta name="description" content="Over the course of this year, we have been rapidly adding new features of Adobe Document Services. We had some great announcements in March that brought some of"><meta property="og:title" content="Adobe PDF Tools API: Unpacking the October Release — Ben Vanderberg"><meta property="og:description" content="Over the course of this year, we have been rapidly adding new features of Adobe Document Services. We had some great announcements in March that brought some of"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/unpacking-october-release-adobe-document-services-e9d0919c1b7b"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Adobe PDF Tools API: Unpacking the October Release</h1><span class="meta">January 1, 2021</span><img class="hero-img" src="/blog/unpacking-october-release-adobe-document-services/01.png" alt=""><div class="article-body"><p>Over the course of this year, we have been rapidly adding new features of Adobe Document Services. We had some great announcements in March that brought some of the release of our new actions to PDF Tools API like Create PDF, OCR, and Export. In July, we followed up that release with a lot of new features with new Lightbox mode in PDF Embed API, Annotations API, XMP metadata API, Compress, Linearize, Protect, Replace, and many more.</p>
+<p>In October, we are keeping our momentum and releasing some new updates for you to get the most out of Adobe Document Services. Here are some of the highlights and a deep dive into what they bring for you. All of these are available in NodeJS, Java, and .NET.</p>
+<h2 id="split-pdf">Split PDF</h2>
+<p>In our previous release, we added the ability for you to combine documents into a single PDF. But what if you want to split a PDF into a number of separate PDF documents?</p>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>In this release, we now added a Split PDF in PDF Tools API so that you can do just that. You can split the document based on:</p>
+<ul>
+<li>Page rangesSpecify which ranges of pages should be split into different documents. For example, if there are three sections, then I can specify the page ranges of each sections to split.</li>
+<li>Number of pagesSpecify the total number of pages per PDF. If I have a 100 page PDF that want to split into smaller files, I can specify that each smaller document will be 10 pages in length.</li>
+<li>Number of documentsSpecify how many documents to split the file into. For example, if I split a 100 page PDF into 4, then each document will be 25 pages.</li>
+</ul>
+<h2 id="protect-pdf">Protect PDF</h2>
+<p>In our last release, we added the ability to add passwords on PDFs. We have improved Protect PDF with the capability to add more granular controls on the protection, including:</p>
+<ul>
+<li>PrintingPrevent someone from printing a document when they have it open. This is ideal for documents with sensitive information.</li>
+<li>EditingPrevent someone from being able to edit the PDF using tools like Adobe Acrobat DC.</li>
+<li>CopyingPrevent someone from copying content from the PDF. For example, if you have sensitive PII information like social security numbers you don’t want someone copying out of the PDF.</li>
+</ul>
+<h2 id="remove-password">Remove Password</h2>
+<p>Do you ever have a PDF document that is password protected but now you don’t need the password protection anymore? Remove Password allows you to take your PDF and remove PDF protection. You need the PDF to the document, but it can output a copy of the document without the protection.</p>
+<h2 id="adobe-pdf-extract-api">Adobe PDF Extract API</h2>
+<p><img src="/blog/unpacking-october-release-adobe-document-services/02.png" alt="Extract API (Private Beta) allows you to understand the structure of PDFs to export them into databases or into websites."></p>
+<p>We released a new private beta of our Adobe PDF Extract API. PDF Extract API is a service that allows you to leverage Adobe Sensei to understand the content structure of PDFs so that you can easily extract information from PDFs in JSON format. While we offer an OCR service as part of PDF Tools API, PDF Extract API goes one step further. It understands the content of the PDF intelligently so that you can extract what elements are headers, paragraphs, lists, and more.</p>
+<p>For more information, see the article Priya posted talking about it in more detail and feel free to request access on Adobe IO.</p>
+<h2 id="summary">Summary</h2>
+<p>We are very excited to be offering more ways you can automate document actions within your organization. With these new updates to PDF Tools API, this will allow you to automate many of the actions that are manual automatically with APIs.</p>
+<p>Have a use-case where you want to automate PDFs within your app? Go give it try right now! Learn more about Adobe PDF Tools API as well as how you can incorporate PDFs into your websites using PDF Embed API. We’d love to hear from you! Come join the forum, download our SDKs to try them out.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

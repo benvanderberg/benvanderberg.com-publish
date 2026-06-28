@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Unpacking the March 2020 Release of Adobe Document Services — Ben Vanderberg</title><meta name="description" content="Just about any person with a computer has interacted with a PDF at some point in their life. Whether it’s in an attachment in their email, downloading a form fr"><meta property="og:title" content="Unpacking the March 2020 Release of Adobe Document Services — Ben Vanderberg"><meta property="og:description" content="Just about any person with a computer has interacted with a PDF at some point in their life. Whether it’s in an attachment in their email, downloading a form fr"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/unpacking-march-release-adobe-document-cloud-sdk-7cccf910e941"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Unpacking the March 2020 Release of Adobe Document Services</h1><span class="meta">April 7, 2020</span><img class="hero-img" src="/blog/unpacking-march-release-adobe-document-cloud-sdk/01.jpeg" alt=""><div class="article-body"><h2 id="new-services-from-adobe-document-services-apis-enable-developers-to-easily-integrate-pdf-functions-into-their-applications">New services from Adobe Document Services APIs enable developers to easily integrate PDF functions into their applications.</h2>
+<p>Just about any person with a computer has interacted with a PDF at some point in their life. Whether it’s in an attachment in their email, downloading a form from a website, or even getting copies of your tax returns. It’s really the “lingua franca,” or common language for everyone to be able to share a document and have it look exactly as you intended when your provide it to another person.</p>
+<p>In today’s world, while there are many apps and libraries that exist to create or view PDFs, they are not created equal. Some might generate a PDF that almost looks like the original but loses the fidelity of the content. There are some libraries that may provide an ability to view PDFs, but the viewing experience is sub-par. Existing libraries may exist, however they can be difficult to use and might require server-side code in a world becoming more cloud-based.</p>
+<p>Today, Adobe announced our new Adobe PDF Embed API and PDF Services API. These are new services that allow you to integrate PDF viewing experiences into your apps with just a few lines of code, as well as create PDFs, combine them together, or export them into different formats. There is a lot to unpack, so here are some of the key developer benefits to take away.</p>
+<h2 id="pdf-embed-api">PDF Embed API</h2>
+<p><img src="/blog/unpacking-march-release-adobe-document-cloud-sdk/02.png" alt=""></p>
+<p>Adobe PDF Embed API allows you to easily embed PDFs into your website or app with just a few lines of JavaScript. Adobe PDF Embed API is a client-side viewer, meaning that it is easy for you to display PDFs hosted on your own websites, even if they are behind a secure wall; Adobe PDF Embed API renders the PDFs as HTML. It is entirely free and available on Adobe.io for any app to use. Here are some of the key features:</p>
+<h3 id="multiple-embed-modes">Multiple embed modes</h3>
+<p>View PDFs in different modes, such as Full-Window, Fixed-Container, or In-Line.</p>
+<h3 id="search">Search</h3>
+<p>Perform inline PDF search.</p>
+<h3 id="annotations">Annotations</h3>
+<p>Allow viewers to annotate PDFs inline. Add comments, draw, highlight, and strike-through text.</p>
+<h3 id="bookmarks--page-views">Bookmarks &amp; page views</h3>
+<p>Any PDFs that are in the source PDF will be automatically available as part of the bookmarks window. All pages are rendered as previews on your left panel to quickly navigate documents.</p>
+<h3 id="event-listeners">Event listeners</h3>
+<p>Adobe PDF Embed API viewing experience can be extended or events can be tracked using event listeners. With just a few lines of code, you can add behaviors based on when a viewer:</p>
+<ul>
+<li>Opens the document</li>
+<li>Views a specific page</li>
+<li>Clicks a bookmark</li>
+<li>Downloads a PDF copy</li>
+<li>Prints a PDF</li>
+<li>Opens a hyperlink</li>
+<li>Copies text to their clipboard</li>
+<li>Searches for a certain bit of text</li>
+<li>Changes the zoom level</li>
+</ul>
+<p>All of the event listeners have benefits that allow you to either extend the user experience based on those events, or provide analytics on how they interacted with the PDFs.</p>
+<p>If you want to learn more, see the walkthrough on how to get started with the Adobe PDF Embed API, or check out the interactive demo available on Adobe.io or read our recent blog on how to started.</p>
+<h2 id="analytics">Analytics</h2>
+<p><img src="/blog/unpacking-march-release-adobe-document-cloud-sdk/03.png" alt=""></p>
+<p>One of the other benefits that come from Adobe PDF Embed API is analytics. Many marketers today often have a strong desire to get reading and viewing data for PDFs just like they do with webpages. With Adobe PDF Embed API, you can do just that with its built-in Adobe Analytics integration.</p>
+<p>If you don’t have Adobe Analytics, then the event listeners in Adobe PDF Embed API still allow you to get the information and write your own connectors to put them into your BI software.</p>
+<p>If you would like to learn more about how to integrate your PDFs with Adobe Analytics, see documentation on how easy it is to connect up with your Report Suites.</p>
+<h2 id="conversational-marketing">Conversational marketing</h2>
+<p><img src="/blog/unpacking-march-release-adobe-document-cloud-sdk/04.png" alt=""></p>
+<p>As part of Adobe Summit, we discussed how you can use Adobe Marketo with PDF Embed API to integrate PDF viewing experiences directly into conversational marketing experiences, like a chatbot. Many organizations utilize chatbots to provide easy personal ways to communicate with customers on their websites and apps.</p>
+<h3 id="integrate-pdf-viewing-into-your-bot-conversation">Integrate PDF viewing into your bot conversation</h3>
+<p>Adobe Marketo is integrating Adobe PDF Embed API into bot conversation experiences, allowing you to easily provide whitepapers and content to visitors in the context of the conversation. For example, let’s say a visitor comes to your website and is greeted by a bot. The visitor is looking for some more information on a topic. The bot can then offer up PDF content for them to view inline.</p>
+<h3 id="trigger-retargeting-actions-based-on-pdf-events">Trigger retargeting actions based on PDF events</h3>
+<p>You can also trigger marketing events to trigger based on how users interact with a PDF. For example:</p>
+<ul>
+<li>If someone downloads a PDF, you may want to notify a sales person associated with this contact.</li>
+<li>When someone views a whitepaper, you may want to change a lead status to hot as this customer is very interested.</li>
+<li>When a customer gets to a certain stage in the PDF, then you can trigger a chatbot to present itself to help convert a visitor to a lead, such as prompting them to sign up to a service or book an appointment.</li>
+</ul>
+<p>All of the events available as part of Adobe PDF Embed API can be used to trigger actions in Marketo.</p>
+<h2 id="pdf-services-api">PDF Services API</h2>
+<p>Adobe is now releasing Adobe PDF Services API for PDFs to developers. This means that in scenarios where you need to create a PDF, export it into another format, or combine PDFs into one PDF, you can do that through easy cloud services.</p>
+<h3 id="create-pdf">Create PDF</h3>
+<p>Create PDF allows you to take documents that you have in a variety of formats, such as Word or images, and convert them into a PDF. When the document is converted into PDF, it is automatically optimized and uses Optical Character Recognition to make documents accessible and searchable using Adobe PDF engine.</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>In the sample code in GitHub, you can see examples like:</p>
+<ul>
+<li>Create PDF from DOCX Stream</li>
+<li>Create PDF from DOCX to Output Stream</li>
+<li>Create PDF from DOCX File</li>
+<li>Create a PDF from Dynamic HTML</li>
+<li>Create a PDF from Static HTML</li>
+<li>Create a PDF from PPTX</li>
+</ul>
+<h3 id="convert-html-to-pdf">Convert HTML to PDF</h3>
+<p>One of the other benefits of Create PDF is that it allows you to convert HTML into PDF. The sources of this PDF can either be local or based on an accessible URL. This can be very useful when you are trying to snapshot what a website looked like during a period of time (like your own wayback machine).</p>
+<p>With many PDF renderers, this can generate mixed results when converting HTML to PDF or require a lot of XSL-FO magic. When using Create PDF, it renders the HTML along with its CSS and JavaScript. This means to create logic, to add and remove sections, how to style, etc., you can use the skills you already have with HTML, JavaScript, and CSS to create PDFs. Think of it like create an SPA (single-page app) for PDF.</p>
+<p>There are a number of scenarios where this can become very useful:</p>
+<ul>
+<li>If you need to assemble a terms and conditions PDF from HTML hosted on your website.</li>
+<li>If you need to create a quote summary from your webpage.</li>
+<li>Sometimes the way that you present documents online aren’t as reliable as PDF. Using Create PDF, you can convert a document to PDF and then serve it to your user using PDF Embed API, giving an easy preview engine for a variety of formats.</li>
+</ul>
+<h3 id="ocr-pdfs-increase-searchability">OCR PDFs: Increase searchability</h3>
+<p>There are millions of PDFs that have been created by scans or by systems that do not make searchable PDFs. With Create PDF, you can optimize your old unsearchable PDFs and make them searchable. This has a number of benefits:</p>
+<ul>
+<li>Use Create PDF with your automation or RPA services to take old PDFs and make them searchable.</li>
+<li>Take PDFs that were created in another application that were not ideally searchable and optimize them to be readable by repositories like SharePoint, Dropbox, BOX, etc.</li>
+</ul>
+<p>Incorporating this OCR into your code is extremely simple. Here is a snippet of incorporating OCR in Node:</p>
+<h3 id="export-pdf">Export PDF</h3>
+<p>Export PDF allows you to take a PDF and convert it into a format such as a Word document or an image. There are a few key benefits of where this can come into play:</p>
+<ul>
+<li>Many enterprise applications provide easy export of content or data as PDFs like quotes, contracts, manuals, etc., but not to formats like Microsoft Word. Using this API, you could take the output PDF from another system and easily convert it into Word as a reusable and editable document.</li>
+<li>Sometimes you lose the source document for a PDF and you want to convert it back into an editable format like Word. This would allow you to do that easily and expose that functionality within your app.</li>
+</ul>
+<p>Here is an example in Node:</p>
+<h3 id="combine-pdf">Combine PDF</h3>
+<p>When I am searching for content on a web page, I may need to download a lot of different PDFs, which can be unmanageable. Instead, using the Combine PDF API, you can take all the PDFs and combine them into one easily manageable PDF for someone to download.</p>
+<p>Combine pages also allows you to select which pages you are combining, which means you can choose only the specific pages that are necessary for the new PDF.</p>
+<p>Some examples where this can be a benefit:</p>
+<ul>
+<li>Compiling a number of documents to provide a personalized proposal to a customer online</li>
+<li>Instead of having to navigate to multiple PDFs and pages, use your visitor data to assemble content into one viewing experience that is seamless.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>There are a wealth of different services now available as part of Adobe Document Cloud. Whether it is an online web-app, an RPA tool, or workflow solution, Adobe PDF Services API offers a variety of easy API to allow you to automate and create the best PDF experiences.</p>
+<p>We’d love to hear from you and get your feedback and experience. Please open the conversation, reply to the post, or reach out to me @benvanderberg on Twitter.</p>
+<p>EDITOR UPDATE (6/11/2021): Updated names of APIs to reflect new branding Adobe PDF Embed API and Adobe PDF Services API.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

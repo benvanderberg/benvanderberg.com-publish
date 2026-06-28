@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Create a Variable Number of Recipients with Adobe Sign for Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="Adobe Sign for Microsoft Power Automate connector provides the flexibility to automate several of your document workflows, receive electronic signatures, etc. I"><meta property="og:title" content="Create a Variable Number of Recipients with Adobe Sign for Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="Adobe Sign for Microsoft Power Automate connector provides the flexibility to automate several of your document workflows, receive electronic signatures, etc. I"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate-594a4ea90da9"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Create a Variable Number of Recipients with Adobe Sign for Microsoft Power Automate</h1><span class="meta">March 17, 2021</span><img class="hero-img" src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/01.png" alt=""><div class="article-body"><p>Adobe Sign for Microsoft Power Automate connector provides the flexibility to automate several of your document workflows, receive electronic signatures, etc. In combination with connections to Office 365 Users and the over 200 connectors available in Microsoft Power Automate, this gives you great power to automate document routing instead of manually entering information.</p>
+<p>In Fall 2020, Adobe Sign for Microsoft Power Automate connectors were updated to allow you to set your flow based off of a variable number of recipients rather than a fixed number of recipients. The new connector gives you tremendous flexibility when used with Microsoft Power Automate or Microsoft Power Apps.</p>
+<p>In this post, you’ll learn how to take advantage of the variable number of recipients based on a contract value triggered from Microsoft SharePoint.</p>
+<h2 id="the-following-scenario-will">The following scenario will:</h2>
+<ul>
+<li>Be triggered by a selected file in SharePoint.</li>
+<li>Check if a parameter is greater than $10K contract value.</li>
+<li>If larger than $10K, it will add your manager as a signer before the customer.</li>
+<li>If less than $10K, it will set you as the signer and send you an agreement to sign.</li>
+</ul>
+<h2 id="download-a-sample-workflow">Download a sample workflow</h2>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/02.png" alt=""></p>
+<p>For those of you already familiar with Microsoft Power Automate, download the sample Flow here.</p>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>If you’re less familiar with Microsoft Power Automate and you want to learn how to build the Flow from scratch, read on.</p>
+<h2 id="what-you-will-need">What you will need</h2>
+<ul>
+<li>Adobe Sign for enterprise</li>
+<li>Microsoft Power Automate</li>
+</ul>
+<p>If you don’t already own Adobe Sign for enterprise but still want to try it out, get a trial here.</p>
+<h2 id="creating-your-flow">Creating your flow</h2>
+<h3 id="create-a-flow">Create a flow</h3>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/03.png" alt="Select “for a selected file” when initiating your cloud flow in Microsoft Power Automate."></p>
+<ol>
+<li>Log into Microsoft Power Automate.</li>
+<li>Click Create in the sidebar.</li>
+<li>Click Instant cloud flow.</li>
+<li>Set your Flow name to what you would like to call your flow. e.g. Send for contract approval.</li>
+<li>Under choose how to trigger this flow, select For a selected file (SharePoint).</li>
+<li>In the Site Address field, set the SharePoint site you want associated with this flow.</li>
+<li>In the Library Name Field, set the SharePoint library name you want associated with this flow.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/04.png" alt=""></p>
+<h3 id="add-input-parameters">Add input parameters</h3>
+<p>Now we need to add input parameters to our flow. These will be prompted in SharePoint when the flow is started.</p>
+<ol>
+<li>In your trigger For a selected file, click + Add an input.</li>
+<li>Add an Email Field and name it Customer.</li>
+<li>Click + Add an input.</li>
+<li>Add a Number field and call it Contract Value.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/05.png" alt=""></p>
+<h3 id="create-a-recipients-variable">Create a recipients variable</h3>
+<p>Next, we will create a recipients variable. This will be used to add or remove recipients.</p>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/06.png" alt=""></p>
+<ol>
+<li>Click + New step.</li>
+<li>Search for Initialize variable.</li>
+<li>In the Name field, set it to Recipients.</li>
+<li>In Type field, set it to Array.</li>
+<li>Now create another Initialize variable step as you did between steps 1–2. This time name it Order and setting the Type to Integer. Set the Value to 1.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/07.png" alt=""></p>
+<p>We are going to use the order variable to determine the order of recipients so that we can dynamically add and remove them. If a recipient has the same order number, then it will go out to recipients simultaneously.</p>
+<h3 id="add-a-condition">Add a condition</h3>
+<p>Next we are going to add a condition to determine the route to take based on the contract value.</p>
+<ol>
+<li>Click + New step.</li>
+<li>Click on Control.</li>
+<li>Click on Condition.</li>
+<li>In Choose a value, use the Dynamic Content panel to select Contract Value.</li>
+<li>Click on is equal to and set Choose a value to 10000.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/08.png" alt=""></p>
+<h3 id="add-adobe-sign-step">Add Adobe Sign step</h3>
+<p>We will add the details of the condition a little later. Next, we are going to add an Adobe Sign Create an agreement step after the Condition. In this scenario, we are going to use an agreement from a library template, but you can use any of the other Create agreement options as well such as via URL, transient document, etc.</p>
+<ol>
+<li>After the Condition action, Click + New step.</li>
+<li>Search for Adobe Sign and select.</li>
+<li>Search for Create an agreement from a library template and send for signature.</li>
+<li>In the new Adobe Sign step, click the toggle to switch to show entire array.</li>
+<li>Now you will see the JSON exposed. Copy the text in between the brackets [] and copy it to your clipboard.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/09.png" alt=""></p>
+<h3 id="configure-manager-escalation">Configure manager escalation</h3>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/10.png" alt=""></p>
+<p>Now we are going to go back and configure the condition. If the contract is greater than $10K, we want our manager to approve the contract before it goes for signature to the initiator and then the customer. To do this, we are going to use Office 365 User to get the current user’s manager.</p>
+<ol>
+<li>Click on the Condition action. Under the If yes section of the condition, click Add an action.</li>
+<li>Search for Get manager (V2)</li>
+<li>In the User (UPN) field, use the Dynamic Content panel to select User id.</li>
+<li>Click add an action.</li>
+</ol>
+<p>Now we are going to append this recipient to our recipients array that we created earlier.</p>
+<ol>
+<li>Search for append to array variable.</li>
+<li>Set Name to Recipients.</li>
+<li>In the Value field, paste the copied JSON from your clipboard. This was copied from the Create an agreement from a library template and send for signature Adobe Sign step.</li>
+<li>In the JSON text, we are going to input variables where “null” is written. Using your Dynamic Content panel, change the email value to the Mail variable from Get manager (v2) 2. Then change the order value to the Order variable under Variables. Set the role to “APPROVER”.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/11.png" alt=""></p>
+<ol>
+<li>Use the … menu to rename the step Add Manager to Recipients.</li>
+<li>Click + New step after the Add Manager to Recipients step, still in the If yes section.</li>
+<li>Search for Increment.</li>
+<li>Select Increment variable.</li>
+<li>In Name, set it to order.</li>
+<li>In Value, set it to 1.</li>
+<li>Click on the … menu to rename the action to Add to Order.</li>
+</ol>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/12.png" alt=""></p>
+<p>This will now increment the Signer Order by 1, so the next signer will be Signer 2.</p>
+<h3 id="add-initiator-recipient">Add Initiator recipient</h3>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/13.png" alt=""></p>
+<p>Next, we need to add our initiator and customer as recipients. So far, if the value is greater than $10K, the manager will be the first signer, then the initiator, then the customer. If it is less than that, it will just go to the initiator and the customer.</p>
+<ol>
+<li>Between the Adobe Sign step and the Condition, click the + to add an action.</li>
+<li>Search for Append to array variable and add that new step.</li>
+<li>Under Name, select recipients.</li>
+<li>Similar to what we did previously, paste the JSON from Adobe Sign into the variable.</li>
+<li>Change the value of email to User email, order to Order variable, and role to “SIGNER”.</li>
+<li>Rename the step “Add Initiator”.</li>
+</ol>
+<p>You will notice at this point that we used “APPROVER” for the manager and “SIGNER” for the initiator. These are different signing roles, which you can learn more about here.</p>
+<h3 id="add-customer-recipient">Add customer recipient</h3>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/14.png" alt=""></p>
+<p>Now that we have added the main parts, the next parts are easy because we can copy from previous steps in the workflow.</p>
+<ol>
+<li>Go back to your step Add to Order step, click on the … menu and select Copy to my clipboard.</li>
+<li>After Add Initiator step, click the + sign and Add an action.</li>
+<li>Switch to the My Clipboard tab.</li>
+<li>Select Add to Order in the list.</li>
+<li>Next, go to your Add Initiator step, click the … menu and select Copy to my clipboard.</li>
+<li>After Add to Order 2 step, Add an action.</li>
+<li>Switch to the My Clipboard tab.</li>
+<li>Select Add Initiator in the list.</li>
+<li>Rename the new step to Add Customer.</li>
+<li>Change the email parameter to Customer Email using the Dynamic Content panel.</li>
+<li>Save your flow.</li>
+</ol>
+<h3 id="give-it-a-try">Give it a try</h3>
+<p><img src="/blog/variable-number-of-recipients-for-adobe-sign-for-microsoft-power-automate/15.png" alt=""></p>
+<p>Now that you have the action set up, you can now use it within your SharePoint document library.</p>
+<ol>
+<li>Go to your SharePoint website.</li>
+<li>Select the file you want to send for signature.</li>
+<li>Click Automate in the ribbon and select your flow.</li>
+<li>Click Continue.</li>
+<li>Click Run flow.</li>
+</ol>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Conditional routing of documents for signature provides much-needed flexibility, allowing you to route documents to different signatories within your organization without relying on a multitude of complex workflows or institutional knowledge. In combination with the Office 365 Users connector, you can intelligently route escalations based on Azure AD, which is extremely useful.</p>
+<p>If you are interested in these actions, also have a look at ways you can use Adobe Creative Cloud and Adobe PDF Tools to automate your document actions.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Tag PDFs for Screen Readers Automatically in Microsoft Power Automate — Ben Vanderberg</title><meta name="description" content="How to build a no-code Power Automate flow that uses Adobe PDF Accessibility Auto-Tag API to automatically tag PDFs for screen readers at scale."><meta property="og:title" content="Tag PDFs for Screen Readers Automatically in Microsoft Power Automate — Ben Vanderberg"><meta property="og:description" content="How to build a no-code Power Automate flow that uses Adobe PDF Accessibility Auto-Tag API to automatically tag PDFs for screen readers at scale."><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/tag-pdfs-for-screen-readers-automatically-in-microsoft-power-automate-18be09eb8b5f"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Tag PDFs for Screen Readers Automatically in Microsoft Power Automate</h1><span class="meta">May 17, 2023</span><img class="hero-img" src="/blog/tag-pdfs-screen-readers/01-hero.png" alt=""><div class="article-body"><p>In this article, we will walk through how you can utilize Adobe PDF Services connector in Microsoft Power Automate to automatically tag PDF documents for screen readers. We will see how in just a few steps you can create a streamlined workflow in Microsoft 365 to get PDFs optimized quickly.</p>
+<h2 id="why-is-tagging-in-pdf-documents-important">Why is tagging in PDF documents important?</h2>
+<p>Accessibility is a challenge around the world. According to Information Technology &amp; Innovation Foundation, 42% of reviewed Federal websites failed to meet accessibility tests for users with disabilities. PDFs can also present a challenge to organizations as PDFs can come in a variety of formats such as scanned, digital-native PDFs, as well as from different apps that don’t create optimized PDF documents.</p>
+<p>Adobe Acrobat is one of the primary tools that organizations have used for optimizing PDF documents. Autotag Document and Accessibility Checker tools in Acrobat help ensure that PDF documents have proper accessibility tags. Accessibility tags allow screen readers to understand the appropriate structure and reading order in a document to help screeners navigate and describe components of the document.</p>
+<p>While the amount of content grows larger and larger, there is a large skill gap to meet the needs of remediating all this content. According to Partnership on Employment &amp; Accessible Technology (PEAT), an organization focused on fostering collaborations that build inclusive workplaces for people with disabilities, 50% of organizations said it was difficult for their organization to find candidates with accessibility experience. This means that the appropriate talent to do this work has limited resources. They need solutions to help address the ever-growing amount of content, while at the same time working with limited resources.</p>
+<h2 id="the-solution">The Solution</h2>
+<p>Adobe Acrobat Services offers a PDF Accessibility Auto-Tag API. This service uses Adobe Sensei AI to analyze your document, its structure, and creates automatic tags in the document. A screen reader can then read these tags. It works with both PDF documents that are digital-native (like ones converted from Word) as well as scanned PDF documents.</p>
+<p>This API is remarkably accurate. Some statistics have shown that it can increase productivity of accessibility teams by 40%. However, it is important to note that this does not declare that your PDF documents are instantly compliant with Section 508 or PDF/UA. Tagging can often require interpretation that computers are not able to decipher. To meet those compliance requirements, you may still need to review your PDF documents in Acrobat. However, this can raise the minimum bar significantly from the many PDFs that are posted on websites that do not even contain tags for screen readers.</p>
+<h2 id="scenario">Scenario</h2>
+<p>What we will describe below is how you can create a solution with Power Automate where PDF documents uploaded to a specific folder in SharePoint will get automatically tagged using Adobe PDF Accessibility Auto-Tag API and then placed into a processed folder. This is ideal as it would allow you to start remediating documents in bulk directly inside of Microsoft 365.</p>
+<p>While we are using a OneDrive folder in this example, this will similarly work with SharePoint, BOX, Dropbox, and other services available within Microsoft Power Automate.</p>
+<h2 id="what-you-will-need">What you will need</h2>
+<ul>
+<li>Adobe Acrobat Services</li>
+<li>Microsoft Power Automate (with premium connector access)</li>
+<li>Microsoft OneDrive</li>
+<li>Adobe Acrobat Reader or Acrobat Pro (optional for post-processing review)</li>
+</ul>
+<h2 id="get-your-credentials">Get your credentials</h2>
+<p><img src="/blog/tag-pdfs-screen-readers/02-credentials.png" alt="Adobe PDF Services connector credentials setup in Microsoft Power Automate"></p>
+<p>To get credentials for Adobe PDF Services connector in Microsoft Power Automate, follow the steps that are documented here to create trial credentials and add them to your Microsoft Power Automate environment.</p>
+<p>Once you complete these steps, you can add any of the PDF Services connector actions to your flow.</p>
+<h2 id="prepare-your-onedrive-folders">Prepare your OneDrive folders</h2>
+<p><img src="/blog/tag-pdfs-screen-readers/03-onedrive-folders.png" alt="Input and Output folders in OneDrive for the auto-tagging workflow"></p>
+<p>For this simple example, we have created two folders in OneDrive. The first folder is “Input”, which will be our drop folder for the PDF documents we want to have auto-tagged. The second is the “Output” folder where we want the tagged PDF documents to go after they have been processed.</p>
+<h2 id="create-a-new-flow">Create a new flow</h2>
+<p>Let’s walk through how to create a new flow. We will need it to:</p>
+<ol>
+<li>Trigger when files are added to the folder</li>
+<li>Send the PDF to Adobe PDF Services for tagging</li>
+<li>Save output to the Output folder</li>
+</ol>
+<p>To create your new flow:</p>
+<ol>
+<li>Go to Power Automate</li>
+<li>Click <strong>Create</strong> in the sidebar</li>
+<li>Select <strong>Automated cloud flow</strong></li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/04-create-flow.png" alt="Creating a new automated cloud flow in Microsoft Power Automate"></p>
+<ol start="4">
+<li>For your flow name, set it to your desired name. Ex. “Accessibility Demo.”</li>
+<li>Under <strong>Choose your flow’s trigger</strong>, select <strong>When a file is created (OneDrive for Business)</strong>.</li>
+</ol>
+<h2 id="setup-trigger">Setup trigger</h2>
+<p>Next you will want to set up your trigger to get files from the Input folder.</p>
+<ol>
+<li>Click the <strong>Folder</strong> icon in the Folder field</li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/05-trigger.png" alt="OneDrive trigger folder configuration in Power Automate"></p>
+<ol start="2">
+<li>Navigate to your Input folder in OneDrive.</li>
+</ol>
+<h2 id="add-create-tagged-pdf-action">Add Create tagged PDF action</h2>
+<ol>
+<li>Click on <strong>+ New Step</strong></li>
+<li>Search for “Adobe PDF Services”</li>
+<li>Click on <strong>Adobe PDF Services</strong></li>
+<li>In the actions list, select <strong>Create tagged PDF</strong></li>
+<li>If at this point you are getting asked to enter your credentials, please follow the steps in the Get your credentials section above before continuing.</li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/06-tagged-pdf-action.png" alt="Create tagged PDF action selected in the Adobe PDF Services connector"></p>
+<ol start="6">
+<li>Put your cursor into the <strong>Filename</strong> field and use the Dynamic content panel to enter the <strong>Filename</strong> variable into that field.</li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/07-file-content.png" alt="Adding dynamic file content variable to the Create tagged PDF action"></p>
+<ol start="7">
+<li>Put your cursor into the <strong>File content</strong> field and use the Dynamic content panel to add the <strong>File content</strong> variable into that field.</li>
+<li>Under <strong>Generate Report in XLS Format</strong>, set it to <strong>No</strong>. If you set this to Yes, it will return a ZIP file. If you set it to No, it returns just the PDF document.</li>
+</ol>
+<h2 id="save-file-into-onedrive">Save file into OneDrive</h2>
+<p>In the next step we want to save the file into OneDrive in the Output folder.</p>
+<ol>
+<li>Click on <strong>+ New step</strong></li>
+<li>Search for “OneDrive for Business”</li>
+<li>Select <strong>OneDrive for Business</strong></li>
+<li>In the list of actions, choose <strong>Create file</strong></li>
+<li>Click on the folder icon in the <strong>Folder Path</strong> field and navigate to your Output folder</li>
+<li>Put your cursor in the <strong>File Name</strong> field and use the Dynamic content panel to add the <strong>File Name</strong> field from the Create tagged PDF action.</li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/08-save-to-onedrive.png" alt="Saving the tagged PDF to the Output folder in OneDrive"></p>
+<h2 id="try-new-flow">Try new flow</h2>
+<p>Unlike some other triggers in Power Automate, OneDrive triggers are not instantaneous — they check for new files every 60 seconds. You can force this to be more instantaneous by putting your flow into Test mode.</p>
+<ol>
+<li>While you are editing your flow, click on <strong>Test</strong> in the top-right corner</li>
+<li>Select <strong>Manually</strong></li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/09-test-flow.png" alt="Test mode options in Microsoft Power Automate"></p>
+<ol start="3">
+<li>Click on <strong>Test</strong></li>
+</ol>
+<h2 id="drop-files-in-input-folder">Drop files in Input folder</h2>
+<p>To test this flow, you will want to use a PDF document that does not have tags. You can check by opening your PDF document in Adobe Acrobat Reader.</p>
+<ol>
+<li>Open your document in Acrobat Reader on your computer</li>
+<li>In the left sidebar, click on the <strong>Tags</strong> icon</li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/10-check-tags.png" alt="Checking for tags in the left sidebar of Adobe Acrobat Reader"></p>
+<ol start="3">
+<li>If you see “No Tags available”, this is a good test document.</li>
+</ol>
+<p>Now you can test by adding new files to your Input folder in OneDrive. In Microsoft Power Automate you will be able to see when the action starts.</p>
+<p>If it successfully runs, you will see checkmarks next to each action.</p>
+<p><img src="/blog/tag-pdfs-screen-readers/11-flow-success.png" alt="Successful flow run showing checkmarks next to each action in Power Automate"></p>
+<h2 id="checkout-files-in-acrobat-to-view-tags">Checkout files in Acrobat to view tags</h2>
+<p>In Adobe Acrobat, you can open documents directly from OneDrive, SharePoint, and other repositories.</p>
+<ol>
+<li>Open <strong>Adobe Acrobat</strong></li>
+<li>Click on <strong>Home</strong></li>
+<li>In the left sidebar, click on <strong>Add file storage</strong></li>
+</ol>
+<p><img src="/blog/tag-pdfs-screen-readers/12-acrobat-storage.png" alt="Add file storage option in Adobe Acrobat to connect OneDrive"></p>
+<ol start="4">
+<li>Click on <strong>Add</strong> under OneDrive</li>
+<li>Enter your email address associated with your OneDrive account and click <strong>OK</strong></li>
+<li>Login to your Microsoft 365 account</li>
+<li>When prompted to give permission, <strong>Accept</strong> permissions for Adobe Acrobat</li>
+<li>You can then navigate OneDrive directly in Acrobat</li>
+</ol>
+<p>When you open your PDF document, you will then see that the tags have now been added. You can then review and update them in Adobe Acrobat Pro.</p>
+<p><img src="/blog/tag-pdfs-screen-readers/13-tags-added.png" alt="Tagged PDF document open in Adobe Acrobat with the tags panel visible"></p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<p>With the large volume of content that needs to be optimized for accessibility, having tools to help accelerate this process at scale is key. By using PDF Accessibility Auto-Tag in Microsoft Power Automate, you can help accelerate the process of ensuring that PDFs are accessible for everyone. To learn more and get started, get a free trial of Adobe Acrobat Services, and try for yourself in Microsoft Power Automate.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>

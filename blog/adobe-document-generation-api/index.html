@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Merging Data with Documents Using Adobe Document Generation API — Ben Vanderberg</title><meta name="description" content="When you think of Adobe, you might think of Adobe Acrobat on your computer for creating PDFs. However, Adobe has a lot of developer-friendly cloud-based APIs to"><meta property="og:title" content="Merging Data with Documents Using Adobe Document Generation API — Ben Vanderberg"><meta property="og:description" content="When you think of Adobe, you might think of Adobe Acrobat on your computer for creating PDFs. However, Adobe has a lot of developer-friendly cloud-based APIs to"><meta property="og:type" content="website"><link rel="canonical" href="https://medium.com/adobetech/adobe-document-generation-api-69176a506ff5"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Merging Data with Documents Using Adobe Document Generation API</h1><span class="meta">May 6, 2021</span><img class="hero-img" src="/blog/adobe-document-generation-api/01.png" alt=""><div class="article-body"><p>When you think of Adobe, you might think of Adobe Acrobat on your computer for creating PDFs. However, Adobe has a lot of developer-friendly cloud-based APIs to allow you to do many of the actions you would do in Adobe Acrobat. For example, Adobe PDF Tools API allows you to create PDFs, export them into different formats, extract pages, etc. These are extremely useful for quick tools to incorporate in your app. It’s easy to get started with a pay-as-you-go subscription on AWS that include a free two-week evaluation to try out all the APIs. After your evaluation period, you only pay for what you use.</p>
+<p>Adobe Document Generation API allows you to take your JSON data and easily merge it to create PDF or Word documents.</p>
+<p>There are also a lot of documents that need data merged into them. For example, if your app is creating contracts, invoices, statements of work, or proposals, you not only need to create a PDF, but you want to format and merge data into the document. These may be from data sources like an ERP, CRM (SalesForce, Microsoft Dynamics, etc.), or a database.</p>
+<h2 id="the-challenges">The Challenges</h2>
+<p>There are a couple of ways that this is often done in an app. You might have a Word document that you create on your computer then upload it and may even take that document and send it with tools like Adobe Sign. You might have a library that you use to create that, but the design may all be done in code and the result is a few challenges:</p>
+<ul>
+<li>Template creation is done by a developer, whether through code or custom and complex tools. This means any changes require a development cycle.</li>
+<li>Many tools have limitations on how you can build templates, and whether images and other types of content can be easily inserted into documents automatically.</li>
+<li>These tools may output low fidelity design or use bad PDF libraries that don’t create indexable PDFs.</li>
+<li>Many services are on-premise or dependent on expensive subscriptions as part of a CRM product.</li>
+<li>Not all PDFs outputted from these systems create good, indexable PDFs. Even then, sometimes they still need to be edited or negotiated, like contracts.</li>
+</ul>
+<p>Fortunately, Adobe Document Generation API, which is part of Adobe PDF Tools, can help address this problem.</p>
+<h2 id="what-is-document-generation-api">What is Document Generation API?</h2>
+<p><img src="/blog/adobe-document-generation-api/02.png" alt=""></p>
+<p>Adobe Document Generation API is a cloud-based service that allows you to design and create document templates in Microsoft Word and dynamically generate documents that output as PDF or Microsoft Word (DOCX) format.</p>
+<p>When a document is sent to be generated, JSON data and the template are passed to Adobe Document Generation API and it returns a PDF or DOCX file. Templates are easily created using Microsoft Word documents and there is an easy tagging tool so that your designers of the document templates don’t need to know how to write code. Simple and easy. If you are integrating this onto your website, you can even display the generated document using Adobe PDF Embed API or even protect your documents using Adobe PDF Tools API.</p>
+<p>Here is a quick video on how the Adobe Document Generation Tagger works:</p>
+<h2 id="key-features">Key Features</h2>
+<p>Simple and easy template creation</p>
+<p><img src="/blog/adobe-document-generation-api/03.png" alt=""></p>
+<p>Adobe Document Generation Tagger is an add-in for Microsoft Word that allows you to easily tag your documents. You can import your JSON sample data and select where you want tags to be placed. You don’t need to be a developer to be a template designer — it’s easy to configure yourself. While you don’t have to use the add-in to tag your documents, it is very to use as a non-developer.</p>
+<p>If you are looking for more advanced tags, Adobe Document Generation tags are based on JSONata, so that you can add complex logic and conditions in your templates. There are some great articles that help you learn more of how to get the most of your templates, and a great tutorial to get started.</p>
+<p>Supports complex datasets</p>
+<p>Unlike other document generation tools where your data is dependent on how the tool accepts data, Adobe Document Generation API uses the philosophy of “Bring Your Own Data Model”. It accepts your JSON data and structure, so you don’t have to spend time refactoring your data to fit a template, rather you can fit your template to the data. This means your data’s text, arrays, nested objects, repeating values, etc. are supported and can be mapped into templates.</p>
+<p>Text tags</p>
+<p>Text can be merged into documents wherever a tag is placed.</p>
+<h3 id="image-tags">Image tags</h3>
+<p><img src="/blog/adobe-document-generation-api/04.gif" alt=""></p>
+<p>Any image in your document can dynamically change based on your data. Images can be passed as Base64 and replace other images in your template, so you can create personalized images in documents easily. It means you have a lot of flexibility to pass images, and here is an article helping provide tips using Image tags.</p>
+<h3 id="conditional-text">Conditional text</h3>
+<p><img src="/blog/adobe-document-generation-api/05.gif" alt=""></p>
+<p>Define parts of your document to only show when a certain value is true. For example, if you have a clause that should only show if a customer’s address is set to the state of California. For a more advanced deep dive on conditions, there is an article here.</p>
+<h3 id="numerical-calculations">Numerical calculations</h3>
+<p><img src="/blog/adobe-document-generation-api/06.gif" alt=""></p>
+<p>Calculate the sum, average, etc. of a set of values inline when the document is generated. For example, if you wanted to calculate the total cost of a list of items in a table, you can do that via an easy calculation.</p>
+<h3 id="tables-and-lists">Tables and Lists</h3>
+<p><img src="/blog/adobe-document-generation-api/07.gif" alt=""></p>
+<p>Output a variable number of table rows based on data. For example, if you have a list of products, convert them into a table in the document.</p>
+<h3 id="adobe-sign-tags">Adobe Sign tags</h3>
+<p><img src="/blog/adobe-document-generation-api/08.gif" alt=""></p>
+<p>In Adobe Document Generation Tagger, you can also use the tagger to place Adobe Sign text tags into your document, so that your document is ready to be passed to Adobe Sign for e-signature.</p>
+<h2 id="easy-for-developers-to-use">Easy for developers to use</h2>
+<p>Adobe Document Generation API is so simple to use, and you don’t need to write a lot of code. In fact, there are SDKs and sample code available to help you get started for many languages including:</p>
+<h2 id="get-ben-vanderbergs-stories-inyourinbox">Get Ben Vanderberg’s stories in your inbox</h2>
+<p>Join Medium for free to get updates from this writer.</p>
+<p>Remember me for faster sign in</p>
+<p>· REST APIs</p>
+<p>· Node</p>
+<p>· Java</p>
+<p>· .NET</p>
+<p>· Postman collections</p>
+<p>It’s very easy to incorporate Adobe Document Generation API into functions like an Azure or AWS Lambda functions. Adobe PDF Tools is free to get started and available as a subscription on AWS Marketplace to easily get setup within your app.</p>
+<h2 id="additional-pdf-actions">Additional PDF actions</h2>
+<p>One common scenario is that you may not only just need to generate a document, you may also want to assemble from a number of other documents. For example, you may want to combine with supporting PDF or other documents into one PDF. Because Adobe Document Generation API is part of Adobe PDF Tools, you can utilize it with the other actions available such as:</p>
+<ul>
+<li>
+<p>Combine with other PDF documents such as appendices.</p>
+</li>
+<li>
+<p>OCR supporting scanned documents</p>
+</li>
+<li>
+<p>Protect your PDF from viewing, editing, printing, etc.</p>
+</li>
+<li>
+<p>Export into different formats using Export PDF.</p>
+</li>
+</ul>
+<p>Documents generated can also get sent for signature using Adobe Sign. There are a number of different turn-key integrations for Adobe Sign, but you can also leverage via API. You can get a free developer account for Adobe Sign here and there is a good guide for getting started, as well as an article of best practices with Adobe Sign API.</p>
+<p>If you want to render your generated PDF on a website, have a look at Adobe PDF Embed API, which is a free client-side library for your website to embed PDFs inline in your webpage and get analytics. There is a great online interactive demo to play around with, and you there was a recent session at Adobe Summit (it’s free signup) which walks through getting started with PDF Embed API.</p>
+<h2 id="use-cases">Use-cases</h2>
+<p>Imagine how often someone in your organization manually inputs information from a system into another project. It happens a lot, doesn’t it? What if you could make that easier? Adobe Document Generation API is great for:</p>
+<ul>
+<li>
+<p>Contracts and sales proposals</p>
+</li>
+<li>
+<p>NDA creation</p>
+</li>
+<li>
+<p>Employee offer letters</p>
+</li>
+<li>
+<p>And many more…</p>
+</li>
+</ul>
+<h2 id="how-to-get-started">How to get started</h2>
+<p>Go to AWS Marketplace to subscribe for the free two-week evaluation that includes 500 document transactions to get started. During the subscription process you’ll receive your API credentials and download the SDKs. After your free evaluation, you’ll only pay for the transactions you use.</p>
+<p>Other helpful resources:</p>
+<ul>
+<li>
+<p>Go to the developer resources page for tutorials</p>
+</li>
+<li>
+<p>Review some of the use-cases you can use this with</p>
+</li>
+<li>
+<p>Review the documentation, where you can watch the tutorial videos</p>
+</li>
+<li>
+<p>Go to the forums for help</p>
+</li>
+</ul>
+<p>Adobe Document Generation API is really a powerful tool to make it easy to generate documents. Its extremely easy to get started with and is appealing to both developers and non-developers who need to create document templates.</p>
+<h2 id="suggested-articles">Suggested articles</h2>
+<h2 id="hands-on-with-adobe-document-generation-api">Hands On with Adobe Document Generation API</h2>
+<h3 id="adobe-is-proud-to-announce-the-availability-of-the-document-generation-api-as-part-of-adobe-document-services-learn">Adobe is proud to announce the availability of the Document Generation API as part of Adobe Document Services. Learn…</h3>
+<p>medium.com</p>
+<h2 id="if-this-then-that-conditional-logic-and-document-generation">If This Then That: Conditional Logic and Document Generation</h2>
+<h3 id="a-deep-look-at-conditional-logic-in-document-generation">A deep look at conditional logic in Document Generation.</h3>
+<p>medium.com</p>
+<h2 id="8-tips-for-using-images-with-adobe-document-generation-api">8 Tips for Using Images with Adobe Document Generation API</h2>
+<h3 id="learn-quick-tips-on-how-to-best-use-images-for-dynamically-generating-documents-using-adobe-document-generation-api">Learn quick tips on how to best use images for dynamically generating documents using Adobe Document Generation API.</h3>
+<p>medium.com</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>
