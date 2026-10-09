@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Rename Your Images with AI, Right from Finder — Ben Vanderberg</title><meta name="description" content="Rename images directly from Finder with an Apple Shortcut that uses Apple's on-device Foundation Model to generate descriptive filenames."><meta name="author" content="Ben Vanderberg"><link rel="canonical" href="https://benvanderberg.com/blog/rename-your-images-with-ai-right-from-finder/"><!-- Open Graph (LinkedIn, Facebook, Slack) --><meta property="og:site_name" content="Ben Vanderberg"><meta property="og:title" content="Rename Your Images with AI, Right from Finder — Ben Vanderberg"><meta property="og:description" content="Rename images directly from Finder with an Apple Shortcut that uses Apple's on-device Foundation Model to generate descriptive filenames."><meta property="og:type" content="article"><meta property="og:url" content="https://benvanderberg.com/blog/rename-your-images-with-ai-right-from-finder/"><meta property="og:image" content="https://benvanderberg.com/images/og-default.png"><meta property="article:author" content="Ben Vanderberg"><!-- Twitter / X --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rename Your Images with AI, Right from Finder — Ben Vanderberg"><meta name="twitter:description" content="Rename images directly from Finder with an Apple Shortcut that uses Apple's on-device Foundation Model to generate descriptive filenames."><meta name="twitter:image" content="https://benvanderberg.com/images/og-default.png"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Rename Your Images with AI, Right from Finder</h1><span class="meta">October 9, 2026</span><div class="article-body"><p>We’ve all got a Downloads folder full of files named <code>IMG_4821.png</code> or <code>Untitled (3).png</code>. Finding the one you need means opening each file and looking.</p>
+<p>This Apple Shortcut fixes that. Select your images in Finder, run it, and each file is renamed to describe what’s in it, like <code>man_in_suit_at_formal_event.png</code>.</p>
+<h2 id="what-it-does">What it does</h2>
+<p>The Apple Shortcut takes the files you’ve selected in Finder and, for each one:</p>
+<ol>
+<li>Sends the image to Apple’s on-device Foundation Model using the <code>fm</code> command-line tool.</li>
+<li>Asks for a short description of 3 to 6 words.</li>
+<li>Turns that description into a clean, lowercase filename with underscores.</li>
+<li>Renames the file, keeping its original extension.</li>
+</ol>
+<p>If two images get the same description, it adds a number to the end (<code>_2</code>, <code>_3</code>, and so on), so nothing gets overwritten. When it finishes, it reports how many files were renamed and lists any that failed.</p>
+<h2 id="what-is-fm">What is <code>fm</code>?</h2>
+<p><code>fm</code> is the Apple Foundation Models CLI, a command-line tool that comes with macOS 27. It lets you talk to the AI model Apple built into your Mac, straight from Terminal or from a script.</p>
+<p>You give it a prompt, and optionally an image, and it prints a response:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> respond</span><span style="color:#79B8FF"> --image</span><span style="color:#9ECBFF"> photo.jpg</span><span style="color:#79B8FF"> --text</span><span style="color:#9ECBFF"> "What is in this image?"</span></span></code></pre>
+<p>Because it’s a normal command-line tool, you can use it from shell scripts, AppleScript, and Apple Shortcuts. That’s how this project works. The Apple Shortcut hands each image to <code>fm</code> and uses the answer as the new filename.</p>
+<h2 id="why-do-it-this-way">Why do it this way?</h2>
+<ul>
+<li><strong>The model is already on your Mac.</strong> There’s nothing to download, no API key to set up, and no separate app to install.</li>
+<li><strong>It’s private and secure.</strong> The model runs on your machine, so your images are never uploaded to a server. That matters for screenshots, client work, or personal photos.</li>
+<li><strong>It doesn’t cost you tokens.</strong> Renaming a folder of images with ChatGPT or Claude means uploading every file and spending your usage on a chore. This runs locally, so you can rename hundreds of files without using up either one.</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>macOS 27 or later.</strong> The <code>fm</code> tool is part of macOS 27, so this won’t work on earlier versions.</li>
+<li><strong>Accepting the <code>fm</code> terms.</strong> You need to agree to the Legal Notice &amp; Terms once before the tool will work (see the next section).</li>
+</ul>
+<h2 id="one-time-setup-accept-the-terms">One-time setup: accept the terms</h2>
+<p>Before the first run, open Terminal and run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> license</span></span></code></pre>
+<p>This shows the Legal Notice &amp; Terms and lets you agree to them. If you skip this step, <code>fm</code> won’t return descriptions, and the Apple Shortcut will report that each file failed.</p>
+<p>You only need to do this once.</p>
+<h2 id="install-the-apple-shortcut">Install the Apple Shortcut</h2>
+<ol>
+<li>Open the link on your Mac: <a href="https://www.icloud.com/shortcuts/1cfbe1a3085e427aaf4553400bcc5de6">Rename Images with AI</a></li>
+<li>Click <strong>Add Shortcut</strong> in the Apple Shortcuts app.</li>
+<li>Run it once. macOS will ask whether the Apple Shortcut can control Finder and run a shell script. Allow both, since it needs them to read your selection and rename the files.</li>
+</ol>
+<h2 id="add-it-to-finders-quick-actions">Add it to Finder’s Quick Actions</h2>
+<p>The best way to use this Apple Shortcut is straight from Finder’s right-click menu. Select your images, right-click, and choose <strong>Quick Actions → Smart Rename</strong> (or whatever you named your shortcut).</p>
+<p><img src="/blog/rename-your-images-with-ai-right-from-finder/quick-actions-finder.png" alt="Finder’s right-click menu showing the Smart Rename shortcut under Quick Actions"></p>
+<p>To set it up:</p>
+<ol>
+<li>Open the <strong>Apple Shortcuts</strong> app and double-click the shortcut to open it in the editor.</li>
+<li>Click the <strong>Shortcut Details</strong> button (the <strong>ⓘ</strong> icon) in the toolbar to open the details panel.</li>
+<li>Turn on <strong>Use as Quick Action</strong>.</li>
+<li>Check <strong>Finder</strong>. You can leave the other options unchecked.</li>
+<li>Close the editor. The shortcut is saved automatically.</li>
+</ol>
+<p>Now go to Finder, select some images, right-click, and look under <strong>Quick Actions</strong>. Your shortcut will be in the list.</p>
+<p>If it doesn’t show up, choose <strong>Customize…</strong> at the bottom of the Quick Actions menu (you can see it in the screenshot) and make sure the shortcut is checked. You can also look in <strong>System Settings</strong> under the Finder extensions list and confirm the shortcut is enabled there.</p>
+<h2 id="how-to-use-it">How to use it</h2>
+<ol>
+<li>In Finder, select the image files you want to rename.</li>
+<li>Right-click and choose <strong>Quick Actions</strong> and then your shortcut. You can also run it from the Apple Shortcuts app, the menu bar, or wherever you’ve pinned it.</li>
+<li>Wait a few seconds per image. The model works through them one at a time.</li>
+<li>Check the summary at the end, then look at your folder.</li>
+</ol>
+<h2 id="how-it-works">How it works</h2>
+<p>The Apple Shortcut is two actions: <strong>Get Selected Files in Finder</strong> and <strong>Run AppleScript</strong>. The AppleScript calls <code>fm</code> like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> respond</span><span style="color:#79B8FF"> --no-stream</span><span style="color:#79B8FF"> --image</span><span style="color:#9ECBFF"> "/path/to/image.png"</span><span style="color:#79B8FF"> --text</span><span style="color:#9ECBFF"> "Describe this image in 3 to 6 words. Reply with only the description, no punctuation."</span></span></code></pre>
+<p>It cleans up the response and then uses Finder to rename the file. To change the style of the names, edit the prompt inside the Run AppleScript action. For example, you could ask for a longer description, or one that starts with the main subject.</p>
+<h2 id="tips-and-caveats">Tips and caveats</h2>
+<ul>
+<li><strong>Try a copy first.</strong> Descriptions come from a small on-device model, so they won’t always be accurate. Test on a few files before running it on a whole folder.</li>
+<li><strong>Only images.</strong> The Apple Shortcut is built for image files. Other file types will most likely fail or get meaningless names.</li>
+<li><strong>Renaming has no undo in the Apple Shortcut.</strong> If you want to go back, use Finder’s <strong>Edit → Undo Rename</strong> right after running it, or keep a backup.</li>
+</ul>
+<h2 id="get-it">Get it</h2>
+<p><a href="https://www.icloud.com/shortcuts/1cfbe1a3085e427aaf4553400bcc5de6">Download the Apple Shortcut</a></p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>
