@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v7.0.2"><title>Add AI Descriptions to Your Image Metadata, Right from Finder — Ben Vanderberg</title><meta name="description" content="Add AI-generated descriptions to your images' XMP metadata directly from Finder using an Apple Shortcut, on-device AI, and ExifTool."><meta name="author" content="Ben Vanderberg"><link rel="canonical" href="https://benvanderberg.com/blog/add-ai-descriptions-to-image-metadata/"><!-- Open Graph (LinkedIn, Facebook, Slack) --><meta property="og:site_name" content="Ben Vanderberg"><meta property="og:title" content="Add AI Descriptions to Your Image Metadata, Right from Finder — Ben Vanderberg"><meta property="og:description" content="Add AI-generated descriptions to your images' XMP metadata directly from Finder using an Apple Shortcut, on-device AI, and ExifTool."><meta property="og:type" content="article"><meta property="og:url" content="https://benvanderberg.com/blog/add-ai-descriptions-to-image-metadata/"><meta property="og:image" content="https://benvanderberg.com/blog/add-ai-descriptions-to-image-metadata/header.png"><meta property="article:author" content="Ben Vanderberg"><!-- Twitter / X --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Add AI Descriptions to Your Image Metadata, Right from Finder — Ben Vanderberg"><meta name="twitter:description" content="Add AI-generated descriptions to your images' XMP metadata directly from Finder using an Apple Shortcut, on-device AI, and ExifTool."><meta name="twitter:image" content="https://benvanderberg.com/blog/add-ai-descriptions-to-image-metadata/header.png"><!-- Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-EKNK7E8PJW"></script><script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EKNK7E8PJW');
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.CLlBsLDX.css"></head><body><header class="site-header"><div class="site-header-inner"><a href="/" class="site-title">Ben Vanderberg</a><nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/about/">About</a><a href="/blog/" aria-current="page">Blog</a><a href="/events/">Events</a><a href="/videos/">Videos</a><a href="/search/">Search</a></nav></div></header><main data-pagefind-body><div class="container"><article class="article"><h1>Add AI Descriptions to Your Image Metadata, Right from Finder</h1><span class="meta">October 9, 2026</span><img class="hero-img" src="/blog/add-ai-descriptions-to-image-metadata/header.png" alt=""><div class="article-body"><p>Most image files have no idea what’s in them. A photo named <code>IMG_4821.png</code> carries no description, so searching for it, cataloging it, or making it accessible means doing the work by hand.</p>
+<p>This Apple Shortcut writes the description for you. Select your images in Finder, run it, and each file gets an AI-generated description saved in its XMP metadata, where apps like Adobe Bridge and Lightroom can read it.</p>
+<p>Already renaming files with AI? This is the companion to <a href="https://benvanderberg.com/blog/rename-your-images-with-ai-right-from-finder/">Rename Your Images with AI, Right from Finder</a>. That one changes the filename. This one leaves the filename alone and writes the description into the file itself. Use both together for files that are named and described.</p>
+<h2 id="why-xmp-metadata-matters">Why XMP metadata matters</h2>
+<p>XMP (Extensible Metadata Platform) is the standard way to store information like descriptions, titles, keywords, and credits inside an image file. People use it because it travels with the file, so the information survives when you move, share, or archive an image.</p>
+<p>That’s also why it’s the common language between tools. Adobe Lightroom, Adobe Bridge, and many digital asset management (DAM) systems read and write XMP, so a description added in one place shows up in the others. If your images pass through a pipeline, from camera to editor to asset library to publishing, XMP is how the metadata keeps up.</p>
+<p>The problem is that maintaining metadata is a burden. Writing a good description for every image is tedious, so it often doesn’t happen, and then your search, cataloging, and accessibility workflows suffer.</p>
+<p>What if on-device AI could do that work for you? That’s what this Apple Shortcut does.</p>
+<h2 id="what-it-does">What it does</h2>
+<p>For each image you select in Finder, the Apple Shortcut:</p>
+<ol>
+<li>Sends the image to Apple’s Foundation Model using the <code>fm</code> command-line tool.</li>
+<li>Asks for a short description of what’s in the image.</li>
+<li>Passes that description to <code>exiftool</code>, which writes it to the image’s XMP metadata (the <code>Description</code> field).</li>
+</ol>
+<p>The image is edited in place, and the filename doesn’t change.</p>
+<h2 id="what-is-fm">What is <code>fm</code>?</h2>
+<p><code>fm</code> is the Apple Foundation Models CLI, a command-line tool that comes with macOS 27. It lets you talk to the AI model Apple built into your Mac, straight from Terminal or from a script.</p>
+<p>You give it a prompt, and optionally an image, and it prints a response:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> respond</span><span style="color:#79B8FF"> --image</span><span style="color:#9ECBFF"> photo.jpg</span><span style="color:#79B8FF"> --text</span><span style="color:#9ECBFF"> "What is in this image?"</span></span></code></pre>
+<p>Because it’s a normal command-line tool, you can use it from shell scripts, AppleScript, and Apple Shortcuts, and you can pipe its output into other tools. That’s how this project works: <code>fm</code> writes the description, and <code>exiftool</code> saves it.</p>
+<h2 id="why-do-it-this-way">Why do it this way?</h2>
+<ul>
+<li><strong>The model is already on your Mac.</strong> There’s nothing to download, no API key to set up, and no separate app to install.</li>
+<li><strong>It’s private.</strong> The model runs on your machine, so your images aren’t uploaded to a third-party service. That matters for screenshots, client work, or personal photos.</li>
+<li><strong>It doesn’t cost you tokens.</strong> Describing a folder of images with ChatGPT or Claude means uploading every file and spending your usage on a chore. This runs locally, so you can process hundreds of files without using up either one.</li>
+<li><strong>The description travels with the file.</strong> XMP is a standard, so the description stays with the image when you move it, share it, or import it into another app.</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li><strong>macOS 27 or later.</strong> The <code>fm</code> tool is part of macOS 27, so this won’t work on earlier versions.</li>
+<li><strong>Accepting the <code>fm</code> terms.</strong> You need to agree to the Legal Notice &amp; Terms once before the tool will work (see below).</li>
+<li><strong>ExifTool.</strong> It does the writing. The next section covers installing it.</li>
+</ul>
+<h2 id="install-exiftool-with-homebrew">Install ExifTool with Homebrew</h2>
+<p><a href="https://brew.sh">Homebrew</a> is the easiest way to install ExifTool on a Mac. First check whether you already have it. Open Terminal and run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">brew</span><span style="color:#79B8FF"> --version</span></span></code></pre>
+<p>If you see a version number, skip ahead to installing ExifTool. If you get <code>command not found</code>, install Homebrew by pasting this into Terminal:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">/bin/bash</span><span style="color:#79B8FF"> -c</span><span style="color:#9ECBFF"> "$(</span><span style="color:#B392F0">curl</span><span style="color:#79B8FF"> -fsSL</span><span style="color:#9ECBFF"> https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span></span></code></pre>
+<p>When it finishes, Homebrew prints a <strong>Next steps</strong> section with two commands that add it to your PATH. Run those, then close and reopen Terminal.</p>
+<p>Now install ExifTool:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">brew</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> exiftool</span></span></code></pre>
+<p>Confirm it worked:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">exiftool</span><span style="color:#79B8FF"> -ver</span></span></code></pre>
+<h2 id="one-time-setup-accept-the-terms">One-time setup: accept the terms</h2>
+<p>Before the first run, open Terminal and run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> license</span></span></code></pre>
+<p>This shows the Legal Notice &amp; Terms and lets you agree to them. If you skip this step, <code>fm</code> won’t return descriptions, and the Apple Shortcut will fail on every file.</p>
+<p>You only need to do this once.</p>
+<h2 id="install-the-apple-shortcut">Install the Apple Shortcut</h2>
+<ol>
+<li>Open the link on your Mac: <a href="https://www.icloud.com/shortcuts/426a0747372c4dc2919d4ac30881de16">Add AI Description to Metadata</a></li>
+<li>Click <strong>Add Shortcut</strong> in the Apple Shortcuts app.</li>
+<li>Run it once. macOS will ask whether the Apple Shortcut can control Finder and run a shell script. Allow both, since it needs them to read your selection and edit the files.</li>
+</ol>
+<h2 id="add-it-to-finders-quick-actions">Add it to Finder’s Quick Actions</h2>
+<p>The best way to use this Apple Shortcut is straight from Finder’s right-click menu.</p>
+<ol>
+<li>Open the <strong>Apple Shortcuts</strong> app and double-click the shortcut to open it in the editor.</li>
+<li>Click the <strong>Shortcut Details</strong> button (the <strong>ⓘ</strong> icon) in the toolbar.</li>
+<li>Turn on <strong>Use as Quick Action</strong>.</li>
+<li>Check <strong>Finder</strong>. You can leave the other options unchecked.</li>
+<li>Close the editor. The shortcut is saved automatically.</li>
+</ol>
+<p>If it doesn’t show up in the right-click menu, choose <strong>Customize…</strong> at the bottom of the Quick Actions menu and make sure the shortcut is checked.</p>
+<h2 id="how-to-use-it">How to use it</h2>
+<ol>
+<li>In Finder, select the image files you want to describe.</li>
+<li>Right-click and choose <strong>Quick Actions</strong>, then the shortcut. You can also run it from the Apple Shortcuts app or the menu bar.</li>
+<li>Wait a few seconds per image. The model works through them one at a time.</li>
+<li>Check the result with ExifTool:</li>
+</ol>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">exiftool</span><span style="color:#79B8FF"> -XMP-dc:Description</span><span style="color:#9ECBFF"> photo.jpg</span></span></code></pre>
+<p>You’ll see the description the model wrote. You can also open the file in Adobe Bridge or Lightroom and look at its Description field.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>The Apple Shortcut is two actions: <strong>Get Selected Files in Finder</strong> and <strong>Run AppleScript</strong>. For each file, the AppleScript runs a pipeline like this:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">fm</span><span style="color:#9ECBFF"> respond</span><span style="color:#79B8FF"> --image</span><span style="color:#9ECBFF"> photo.jpg</span><span style="color:#79B8FF"> --text</span><span style="color:#9ECBFF"> "Describe this image in one or two sentences. Output only the description."</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#F97583">  |</span><span style="color:#B392F0"> tr</span><span style="color:#79B8FF"> -d</span><span style="color:#9ECBFF"> '\n'</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#F97583">  |</span><span style="color:#B392F0"> exiftool</span><span style="color:#79B8FF"> -overwrite_original</span><span style="color:#79B8FF"> -XMP-dc:Description</span><span style="color:#9ECBFF">'&#x3C;=/dev/stdin'</span><span style="color:#9ECBFF"> photo.jpg</span></span></code></pre>
+<p><code>fm</code> writes the description to standard output, <code>tr</code> strips the trailing newline, and <code>exiftool</code> reads the text from standard input and saves it to the <code>XMP-dc:Description</code> tag. To change the style of the descriptions, edit the prompt inside the Run AppleScript action. For example, you could ask for alt text, keywords, or a longer caption.</p>
+<h2 id="tips-and-caveats">Tips and caveats</h2>
+<ul>
+<li><strong>Try a copy first.</strong> The Apple Shortcut edits files in place (<code>-overwrite_original</code>), and descriptions come from a small model, so they won’t always be accurate. Test on a few copies before running it on a whole folder.</li>
+<li><strong>Only images.</strong> The Apple Shortcut is built for image files that support XMP, like JPEG, PNG, TIFF, and HEIC. Other file types may fail.</li>
+<li><strong>Overwrites existing descriptions.</strong> If an image already has a <code>Description</code>, it gets replaced.</li>
+</ul>
+<h2 id="get-it">Get it</h2>
+<p><a href="https://www.icloud.com/shortcuts/426a0747372c4dc2919d4ac30881de16">Download the Apple Shortcut</a></p>
+<p>And if you also want better filenames, here’s <a href="https://benvanderberg.com/blog/rename-your-images-with-ai-right-from-finder/">Rename Your Images with AI, Right from Finder</a>.</p>
+</div><hr><p><a href="/blog/">← All posts</a></p></article></div></main><footer class="site-footer"><div class="site-footer-inner"><span>© 2026 Ben Vanderberg</span></div></footer></body></html>
